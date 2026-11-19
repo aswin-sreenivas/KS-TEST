@@ -53,7 +53,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-white/70 hover:text-white rounded-[2px] hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A65B]"
+            className="min-w-[44px] min-h-[44px] p-2 flex items-center justify-center text-white/80 hover:text-white rounded-[2px] hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C6A65B]"
             aria-label="Close dialog"
           >
             <X className="w-5 h-5" />

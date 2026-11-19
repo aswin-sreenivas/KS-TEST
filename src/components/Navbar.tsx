@@ -7,13 +7,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Logo } from './Logo';
 import { COMPANY_INFO } from '../data/company';
-import { PageRoute, getRoutePath } from '../types/app';
+import { AppRoute, PageRoute, getRoutePath } from '../types/app';
 import { useDialogBehavior } from '../hooks/useDialogBehavior';
-import { Phone, Menu, X } from 'lucide-react';
+import { Phone, Menu, X, MessageSquare } from 'lucide-react';
 
 interface NavbarProps {
-  currentPage: PageRoute;
-  onNavigate: (page: PageRoute) => void;
+  currentPage: AppRoute;
+  onNavigate: (page: PageRoute, hashSection?: string) => void;
   onOpenContactModal?: () => void;
 }
 
@@ -62,17 +62,17 @@ export const Navbar: React.FC<NavbarProps> = ({
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-200 ${
           isTransparent
-            ? 'bg-gradient-to-b from-[#242918]/85 via-[#242918]/40 to-transparent py-4 sm:py-5'
-            : 'bg-[#343A24] border-b border-[#C6A65B]/20 py-3.5 shadow-sm'
+            ? 'bg-gradient-to-b from-[#242918]/85 via-[#242918]/40 to-transparent py-3.5 sm:py-5'
+            : 'bg-[#343A24] border-b border-[#C6A65B]/20 py-3 shadow-sm'
         }`}
       >
         <div className="corporate-container">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             {/* Official Logo */}
             <button
               type="button"
               onClick={() => handleNavClick('home')}
-              className="text-left focus:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A65B]"
+              className="min-h-[44px] text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C6A65B] rounded-[2px]"
               aria-label="K S Associates – Return to Homepage"
             >
               <Logo
@@ -83,7 +83,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {/* Desktop Navigation Links */}
-            <nav aria-label="Primary Navigation" className="hidden md:flex items-center gap-7 lg:gap-8">
+            <nav aria-label="Primary Navigation" className="hidden md:flex items-center gap-6 lg:gap-8">
               {NAV_LINKS.map((link) => {
                 const isActive = currentPage === link.id;
                 return (
@@ -95,10 +95,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                       handleNavClick(link.id);
                     }}
                     aria-current={isActive ? 'page' : undefined}
-                    className={`text-[13px] tracking-normal font-medium transition-colors duration-150 py-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A65B] ${
+                    className={`min-h-[44px] inline-flex items-center px-1 text-[13px] tracking-normal font-medium transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C6A65B] ${
                       isActive
                         ? 'text-[#C6A65B] font-semibold'
-                        : 'text-white/85 hover:text-white'
+                        : 'text-white/90 hover:text-white'
                     }`}
                   >
                     {link.label}
@@ -108,11 +108,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             </nav>
 
             {/* Mobile Controls */}
-            <div className="flex md:hidden items-center gap-2">
+            <div className="flex md:hidden items-center gap-1 shrink-0">
               <a
                 href={`tel:${COMPANY_INFO.phone}`}
-                className="p-2 text-[#C6A65B] hover:text-white focus:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A65B]"
-                aria-label="Direct Phone Call"
+                className="min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center text-[#C6A65B] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C6A65B] rounded-[2px]"
+                aria-label={`Call K S Associates on ${COMPANY_INFO.displayPhone}`}
+                title={`Call ${COMPANY_INFO.displayPhone}`}
               >
                 <Phone className="w-5 h-5" />
               </a>
@@ -121,7 +122,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={() => setIsMobileMenuOpen((prev) => !prev)}
                 aria-expanded={isMobileMenuOpen}
                 aria-controls="mobile-nav-drawer"
-                className="p-2 text-white hover:text-[#C6A65B] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A65B]"
+                className="min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center text-white hover:text-[#C6A65B] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C6A65B] rounded-[2px]"
                 aria-label={isMobileMenuOpen ? 'Close Menu' : 'Open Navigation Menu'}
               >
                 {isMobileMenuOpen ? (
@@ -149,22 +150,22 @@ export const Navbar: React.FC<NavbarProps> = ({
             aria-label="Mobile Navigation"
             tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
-            className="fixed top-0 right-0 w-4/5 max-w-sm h-full bg-[#343A24] text-white p-6 shadow-xl flex flex-col justify-between border-l border-[#C6A65B]/20 overflow-y-auto focus:outline-none"
+            className="fixed top-0 right-0 w-[85%] max-w-sm h-full bg-[#343A24] text-white p-6 shadow-xl flex flex-col justify-between border-l border-[#C6A65B]/20 overflow-y-auto focus:outline-none"
           >
             <div>
-              <div className="flex justify-between items-center mb-8 pb-4 border-b border-white/10">
+              <div className="flex justify-between items-center mb-6 pb-4 border-b border-white/10">
                 <Logo variant="light" size="sm" showTagline={false} />
                 <button
                   type="button"
                   onClick={closeMobileMenu}
-                  className="p-1.5 text-white/70 hover:text-white focus:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A65B]"
+                  className="min-w-[44px] min-h-[44px] p-2 flex items-center justify-center text-white/80 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C6A65B] rounded-[2px]"
                   aria-label="Close navigation"
                 >
                   <X className="w-6 h-6" />
                 </button>
               </div>
 
-              <nav aria-label="Mobile Menu Links" className="space-y-3">
+              <nav aria-label="Mobile Menu Links" className="space-y-1">
                 {NAV_LINKS.map((link) => {
                   const isActive = currentPage === link.id;
                   return (
@@ -176,10 +177,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                         handleNavClick(link.id);
                       }}
                       aria-current={isActive ? 'page' : undefined}
-                      className={`block w-full text-left text-base font-heading py-2.5 transition-colors border-b border-white/5 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A65B] ${
+                      className={`min-h-[44px] flex items-center w-full text-left text-base font-heading py-3 transition-colors border-b border-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C6A65B] ${
                         isActive
-                          ? 'text-[#C6A65B] font-semibold pl-2 border-l-2 border-l-[#C6A65B]'
-                          : 'text-white/85 hover:text-white'
+                          ? 'text-[#C6A65B] font-semibold pl-3 border-l-2 border-l-[#C6A65B]'
+                          : 'text-white/90 hover:text-white'
                       }`}
                     >
                       {link.label}
@@ -189,20 +190,35 @@ export const Navbar: React.FC<NavbarProps> = ({
               </nav>
             </div>
 
-            <div className="pt-6 border-t border-white/10 space-y-4 text-xs text-white/70">
+            <div className="pt-6 border-t border-white/10 space-y-3 text-xs text-white/80">
               <div>
                 <p className="font-semibold text-white mb-0.5">Office Location:</p>
                 <p>{COMPANY_INFO.address.line1}, {COMPANY_INFO.address.landmark}</p>
                 <p>{COMPANY_INFO.address.city} – {COMPANY_INFO.address.pincode}</p>
               </div>
 
-              <div>
+              <div className="space-y-1">
                 <a
                   href={`tel:${COMPANY_INFO.phone}`}
-                  className="flex items-center gap-2 text-[#C6A65B] font-numeric hover:underline"
+                  className="min-h-[44px] flex items-center gap-2 text-[#C6A65B] hover:underline py-1"
                 >
-                  <Phone className="w-3.5 h-3.5" />
-                  {COMPANY_INFO.displayPhone}
+                  <Phone className="w-4 h-4 shrink-0" />
+                  <span>
+                    Call: <strong className="font-numeric text-white">{COMPANY_INFO.displayPhone}</strong>
+                  </span>
+                </a>
+                <a
+                  href={`https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
+                    COMPANY_INFO.whatsappMessage
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="min-h-[44px] flex items-center gap-2 text-[#25D366] hover:underline py-1"
+                >
+                  <MessageSquare className="w-4 h-4 shrink-0" />
+                  <span>
+                    WhatsApp: <strong className="font-numeric">{COMPANY_INFO.displayWhatsApp}</strong>
+                  </span>
                 </a>
               </div>
 
@@ -216,7 +232,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     handleNavClick('contact');
                   }
                 }}
-                className="w-full py-2.5 px-4 bg-[#C6A65B] text-[#292B27] font-semibold text-center rounded-[3px] uppercase tracking-wider text-xs hover:bg-[#DECA8D] transition-colors"
+                className="min-h-[44px] w-full py-3 px-4 bg-[#C6A65B] text-[#292B27] font-semibold text-center rounded-[3px] uppercase tracking-wider text-xs hover:bg-[#DECA8D] transition-colors"
               >
                 Discuss Your Project
               </button>

@@ -1,7 +1,7 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- * K S Associates – Corporate Profile: About Us (Refined Standard)
+ * K S Associates – Corporate Profile: About Us
  */
 
 import React from 'react';
@@ -19,11 +19,11 @@ import {
   CheckCircle2,
   ShieldCheck,
   Award,
-  FileCheck
+  FileCheck,
 } from 'lucide-react';
 
 interface AboutProps {
-  onNavigate: (page: PageRoute) => void;
+  onNavigate: (page: PageRoute, hashSection?: string) => void;
   onOpenContactModal: () => void;
 }
 
@@ -47,12 +47,12 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
         </div>
       </section>
 
-      <div className="corporate-container space-y-24">
+      <div className="corporate-container space-y-20 sm:space-y-24">
         {/* SECTION 1: Company Introduction */}
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-7 space-y-6">
             <div className="space-y-2">
-              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#C6A65B]">
+              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9B7E38]">
                 Section <span className="font-numeric">01</span> · Corporate Profile
               </span>
               <h2 className="text-3xl sm:text-4xl font-heading font-semibold text-[#343A24]">
@@ -73,16 +73,40 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
             </div>
 
             <div className="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-[#292B27]">
-              <div className="p-4 bg-white rounded-[2px] border border-[#292B27]/10">
-                <span className="text-[#C6A65B] text-[11px] uppercase tracking-wider block mb-1 font-semibold">PRIMARY DESK</span>
-                <span className="text-[#4A4D46] leading-relaxed">
-                  Call: <span className="font-numeric font-bold text-[#292B27]">{COMPANY_INFO.displayPhone}</span><br />
-                  WhatsApp: <span className="font-numeric font-bold text-[#25D366]">{COMPANY_INFO.displayWhatsApp}</span>
+              <div className="p-4 bg-white rounded-[2px] border border-[#292B27]/10 space-y-1">
+                <span className="text-[#9B7E38] text-[11px] uppercase tracking-wider block font-semibold">
+                  PRIMARY DESK
                 </span>
+                <div className="text-[#4A4D46] leading-relaxed space-y-1">
+                  <div>
+                    Call:{' '}
+                    <a
+                      href={`tel:${COMPANY_INFO.phone}`}
+                      className="font-numeric font-bold text-[#292B27] hover:text-[#9B7E38]"
+                    >
+                      {COMPANY_INFO.displayPhone}
+                    </a>
+                  </div>
+                  <div>
+                    WhatsApp:{' '}
+                    <a
+                      href={`https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
+                        COMPANY_INFO.whatsappMessage
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-numeric font-bold text-[#15803D] hover:underline"
+                    >
+                      {COMPANY_INFO.displayWhatsApp}
+                    </a>
+                  </div>
+                </div>
               </div>
-              <div className="p-4 bg-white rounded-[2px] border border-[#292B27]/10">
-                <span className="text-[#C6A65B] text-[11px] uppercase tracking-wider block mb-1 font-semibold">REGISTERED OFFICE</span>
-                <span className="text-[#4A4D46] leading-relaxed">
+              <div className="p-4 bg-white rounded-[2px] border border-[#292B27]/10 space-y-1">
+                <span className="text-[#9B7E38] text-[11px] uppercase tracking-wider block font-semibold">
+                  REGISTERED OFFICE
+                </span>
+                <span className="text-[#4A4D46] leading-relaxed block">
                   {COMPANY_INFO.address.line1}, {COMPANY_INFO.address.landmark}, Feroke, Calicut – {COMPANY_INFO.address.pincode}
                 </span>
               </div>
@@ -95,7 +119,7 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
                 <source srcSet={heroImg1Webp} type="image/webp" />
                 <img
                   src={heroImg1}
-                  alt="K S Associates Architectural Profile"
+                  alt="K S Associates 3D architectural visualization and residential elevation in Feroke, Calicut"
                   width={1376}
                   height={768}
                   loading="lazy"
@@ -111,16 +135,16 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
         </section>
 
         {/* SECTION 2: Our Approach */}
-        <section className="bg-white p-8 sm:p-12 rounded-[2px] border border-[#292B27]/10 space-y-8">
+        <section className="bg-white p-6 sm:p-12 rounded-[2px] border border-[#292B27]/10 space-y-8">
           <div className="max-w-3xl space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#C6A65B]">
+            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9B7E38]">
               Section <span className="font-numeric">02</span> · Operational Methodology
             </span>
             <h2 className="text-3xl sm:text-4xl font-heading font-semibold text-[#343A24]">
               Our Approach
             </h2>
             <p className="text-sm sm:text-base text-[#4A4D46] leading-relaxed">
-              How accurate surveying, realistic visualization, and rigorous civil engineering synchronize to eliminate construction risks.
+              How accurate surveying, realistic visualization, and rigorous civil engineering synchronize to minimize construction risks.
             </p>
           </div>
 
@@ -133,7 +157,7 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
                 Phase 1: Ground Truth & Survey
               </h3>
               <p className="text-xs sm:text-sm text-[#4A4D46] leading-relaxed">
-                Before any architectural lines are finalized, the physical boundaries, levels, setbacks, and contours of the plot are verified. This eliminates boundary disputes and foundation level miscalculations.
+                Before architectural lines are finalized, the physical boundaries, levels, setbacks, and contours of the plot are verified. This helps avoid boundary discrepancies and foundation level errors.
               </p>
             </div>
 
@@ -157,7 +181,7 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
                 Phase 3: Structural Execution
               </h3>
               <p className="text-xs sm:text-sm text-[#4A4D46] leading-relaxed">
-                Execution follows vetted structural drawings strictly. Steel reinforcement, formwork tolerances, concrete grades, and curing cycles are rigorously monitored to ensure long-term structural safety.
+                Execution follows approved structural drawings strictly. Steel reinforcement, formwork tolerances, concrete grades, and curing cycles are systematically monitored to support long-term structural performance.
               </p>
             </div>
           </div>
@@ -172,7 +196,7 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
                   <source srcSet={constructionRccWebp} type="image/webp" />
                   <img
                     src={constructionRccImg}
-                    alt="RCC Structural Framework Execution"
+                    alt="RCC structural framework and concrete slab construction in Kozhikode by K S Associates"
                     width={1376}
                     height={768}
                     loading="lazy"
@@ -186,7 +210,7 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
                   <source srcSet={surveyingSiteWebp} type="image/webp" />
                   <img
                     src={surveyingSiteImg}
-                    alt="Precision Land Surveying Field Scene"
+                    alt="Precision land surveying and site boundary measurement in Calicut by K S Associates"
                     width={1376}
                     height={768}
                     loading="lazy"
@@ -200,7 +224,7 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
                   <source srcSet={cadDrawingWebp} type="image/webp" />
                   <img
                     src={cadDrawingImg}
-                    alt="Architectural Working CAD Plans"
+                    alt="Architectural working CAD floor plans and structural blueprint drafting by K S Associates"
                     width={1376}
                     height={768}
                     loading="lazy"
@@ -214,7 +238,7 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
 
           <div className="lg:col-span-6 order-1 lg:order-2 space-y-6">
             <div className="space-y-2">
-              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#C6A65B]">
+              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9B7E38]">
                 Section <span className="font-numeric">03</span> · Core Competencies
               </span>
               <h2 className="text-3xl sm:text-4xl font-heading font-semibold text-[#343A24]">
@@ -224,7 +248,7 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
 
             <div className="space-y-4 text-[15px] text-[#4A4D46] leading-relaxed">
               <p>
-                Our technical capability spans commercial buildings, multi-family residential apartments, and custom villa estates across Kozhikode and Malappuram districts.
+                Our technical capability spans commercial buildings, multi-family residential apartments, and custom villas across Kozhikode and Malappuram districts.
               </p>
               <ul className="space-y-3 text-xs sm:text-sm text-[#292B27]">
                 <li className="flex items-start gap-2.5">
@@ -236,13 +260,13 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-[#C6A65B] shrink-0 mt-0.5" />
                   <span>
-                    <strong>Engineering Surveying & Demarcation:</strong> Establishing verified site boundaries, property dimensions, and coordinate baselines.
+                    <strong>Engineering Surveying & Demarcation:</strong> Establishing site boundaries, property dimensions, and coordinate baselines.
                   </span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-[#C6A65B] shrink-0 mt-0.5" />
                   <span>
-                    <strong>3D Architectural Rendering:</strong> Translating CAD drawings into photo-accurate daylight, twilight, and facade perspectives.
+                    <strong>3D Architectural Rendering:</strong> Translating CAD drawings into daylight, twilight, and facade architectural perspectives.
                   </span>
                 </li>
               </ul>
@@ -252,9 +276,8 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
 
         {/* SECTION 4 & 5: Our Commitment & Our Work Philosophy */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Section 4: Our Commitment */}
-          <div className="p-8 bg-[#F5F4EF] rounded-[2px] border border-[#292B27]/10 space-y-4">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#C6A65B]">
+          <div className="p-6 sm:p-8 bg-[#F5F4EF] rounded-[2px] border border-[#292B27]/10 space-y-4">
+            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9B7E38]">
               Section <span className="font-numeric">04</span> · Quality Standards
             </span>
             <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-[#343A24]">
@@ -262,17 +285,16 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
             </h2>
             <div className="space-y-3 text-xs sm:text-sm text-[#4A4D46] leading-relaxed">
               <p>
-                At K S Associates, our commitment is centered on transparency, build quality, and structural accountability. We do not compromise on material specifications or bypass site testing protocols.
+                At K S Associates, our commitment is centered on transparency, build quality, and structural accountability. We follow standard site testing and quality-control practices with disciplined material oversight.
               </p>
               <p>
-                We pledge that every drawing delivered is technically constructible, every site dimension reported is mathematically verified, and every structural concrete member placed meets approved architectural specifications and scheduled milestones.
+                We work diligently so that drawings delivered are practical to build, site dimensions are carefully checked, and structural concrete members adhere to approved architectural specifications and project milestones.
               </p>
             </div>
           </div>
 
-          {/* Section 5: Our Work Philosophy */}
-          <div className="p-8 bg-[#F5F4EF] rounded-[2px] border border-[#292B27]/10 space-y-4">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#C6A65B]">
+          <div className="p-6 sm:p-8 bg-[#F5F4EF] rounded-[2px] border border-[#292B27]/10 space-y-4">
+            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9B7E38]">
               Section <span className="font-numeric">05</span> · Ethos
             </span>
             <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-[#343A24]">
@@ -283,17 +305,17 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
                 "A building is only as reliable as the foundation beneath it and the planning behind it."
               </p>
               <p>
-                We believe that great architecture is not merely an artistic sketch, but a rigorous synthesis of geography, structural physics, and craftsmanship. By maintaining strict discipline across our three primary services, we ensure that clients receive enduring value rather than temporary finishes.
+                We believe that sound architecture is a careful synthesis of site context, structural principles, and craftsmanship. By maintaining focus across our three primary services, we help clients build enduring, functional structures.
               </p>
             </div>
           </div>
         </section>
 
         {/* DOCUMENTED CONSTRUCTION EXPERIENCE & CREDENTIALS SECTION */}
-        <section className="p-8 sm:p-12 bg-white rounded-[2px] border border-[#292B27]/12 space-y-8">
+        <section className="p-6 sm:p-12 bg-white rounded-[2px] border border-[#292B27]/12 space-y-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-[#292B27]/10 pb-6 gap-4">
             <div>
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#C6A65B]">
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#9B7E38]">
                 <ShieldCheck className="w-4 h-4 text-[#C6A65B]" />
                 <span>Verified Documentation</span>
               </div>
@@ -306,7 +328,7 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <div className="lg:col-span-7 space-y-4">
               <div className="text-sm font-semibold text-[#343A24]">
                 Project: {CREDENTIALS_DATA.certificate.project}
@@ -321,17 +343,12 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#4A4D46]">
                   {CREDENTIALS_DATA.certificate.scopeSummary.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-2 p-2 bg-[#F5F4EF] rounded-[2px] border border-[#292B27]/8">
+                    <div key={idx} className="flex items-center gap-2 p-2.5 bg-[#F5F4EF] rounded-[2px] border border-[#292B27]/8">
                       <FileCheck className="w-3.5 h-3.5 text-[#C6A65B] shrink-0" />
                       <span>{item}</span>
                     </div>
                   ))}
                 </div>
-              </div>
-
-              {/* Compliance note regarding ISO status */}
-              <div className="p-3.5 bg-[#F5F4EF] border-l-2 border-[#C6A65B] text-[11px] text-[#4A4D46] leading-relaxed">
-                {CREDENTIALS_DATA.certificate.noteOnISO}
               </div>
             </div>
 
@@ -340,19 +357,24 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
                 <Award className="w-4 h-4" />
                 <span>Subcontract Certificate Record</span>
               </div>
-              <div className="space-y-2.5 text-xs text-white/80">
+              <div className="space-y-3 text-xs text-white/85">
                 <div>
-                  <span className="text-white/50 block text-[10px]">ISSUING AUTHORITY</span>
+                  <span className="text-white/60 block text-[10px]">ISSUING AUTHORITY</span>
                   <strong className="text-white text-sm">{CREDENTIALS_DATA.certificate.issuer}</strong>
-                  <div className="text-[#C6A65B] text-[11px]">{CREDENTIALS_DATA.certificate.issuerCredentials}</div>
+                  <div className="text-[#C6A65B] text-[11px] font-medium mt-0.5">
+                    {CREDENTIALS_DATA.certificate.issuerCredentials}
+                  </div>
+                  <p className="text-[11px] text-white/80 leading-relaxed mt-1.5 bg-white/5 p-2.5 rounded-[2px] border-l-2 border-[#C6A65B]">
+                    {CREDENTIALS_DATA.certificate.noteOnISO}
+                  </p>
                 </div>
                 <div className="pt-2 border-t border-white/10">
-                  <span className="text-white/50 block text-[10px]">AWARDED TO</span>
+                  <span className="text-white/60 block text-[10px]">AWARDED TO</span>
                   <strong className="text-white">{COMPANY_INFO.name}</strong>
-                  <div className="text-white/70">{COMPANY_INFO.tagline}</div>
+                  <div className="text-white/75">{COMPANY_INFO.tagline}</div>
                 </div>
                 <div className="pt-2 border-t border-white/10">
-                  <span className="text-white/50 block text-[10px]">RECORD LOCATION</span>
+                  <span className="text-white/60 block text-[10px]">RECORD LOCATION</span>
                   <span className="text-white">Tuneri, Kozhikode, Kerala</span>
                 </div>
               </div>
@@ -361,19 +383,19 @@ export const About: React.FC<AboutProps> = ({ onOpenContactModal }) => {
         </section>
 
         {/* CTA Banner */}
-        <section className="p-8 sm:p-12 bg-[#343A24] text-white rounded-[2px] flex flex-col md:flex-row items-center justify-between gap-6">
+        <section className="p-6 sm:p-12 bg-[#343A24] text-white rounded-[2px] flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-1.5 max-w-xl">
             <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-white">
               Ready to Discuss Your Project with Our Engineers?
             </h2>
-            <p className="text-xs sm:text-sm text-white/75">
+            <p className="text-xs sm:text-sm text-white/80">
               Get in touch for construction subcontracts, land boundary surveying, or 3D architectural elevations.
             </p>
           </div>
           <button
             type="button"
             onClick={onOpenContactModal}
-            className="px-6 py-2.5 bg-[#C6A65B] text-[#292B27] hover:bg-[#DECA8D] font-semibold text-xs uppercase tracking-wider rounded-[3px] transition-colors whitespace-nowrap focus:outline-none focus-visible:ring-1 focus-visible:ring-white"
+            className="min-h-[44px] px-6 py-3 bg-[#C6A65B] text-[#292B27] hover:bg-[#DECA8D] font-semibold text-xs uppercase tracking-wider rounded-[3px] transition-colors whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             Request Consultation
           </button>

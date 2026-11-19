@@ -26,6 +26,7 @@ import royalVillaFloorPlan from '@/src/assets/pdf_extracts/royalvilla_floorplan.
 import constructionRccImg from '@/src/assets/images/ks_construction_rcc_1793621557021.jpg';
 import surveyingSiteImg from '@/src/assets/images/ks_surveying_site_1793621570744.jpg';
 import genericCadDrawing from '@/src/assets/images/ks_cad_drawing_1793621586595.jpg';
+import commercialBcroadImg from '@/src/assets/images/ks_commercial_bcroad_1793621504852.jpg';
 
 // Optimized WebP derivatives for card thumbnails and non-lightbox previews
 import bcroadThumbWebp from '@/src/assets/optimized/bcroad_3d_thumb.webp';
@@ -35,6 +36,7 @@ import royalVillaThumbWebp from '@/src/assets/optimized/royalvilla_3d_thumb.webp
 import constructionRccWebp from '@/src/assets/optimized/ks_construction_rcc.webp';
 import surveyingSiteWebp from '@/src/assets/optimized/ks_surveying_site.webp';
 import genericCadDrawingWebp from '@/src/assets/optimized/ks_cad_drawing.webp';
+import commercialBcroadWebp from '@/src/assets/optimized/ks_commercial_bcroad.webp';
 
 export interface CompanyInfo {
   name: string;
@@ -76,7 +78,7 @@ export interface CompanyInfo {
 export const COMPANY_INFO: CompanyInfo = {
   name: 'K S Associates',
   fullName: 'KS ASSOCIATES ENGINEERING CONSTRUCTION AND SURVEY',
-  tagline: 'Building Trust, Creating Landmarks',
+  tagline: 'Building Trust. Creating Landmarks.',
   industry: 'Civil Engineering',
   description:
     "We are a civil engineering and construction company committed to delivering high-quality construction solutions with excellence, reliability and professionalism. Our services focus on planning, designing and executing construction projects with attention to quality, safety and customer satisfaction. We aim to turn our clients' visions into reality through innovative ideas, skilled workmanship and strong foundations.",
@@ -92,12 +94,13 @@ export const COMPANY_INFO: CompanyInfo = {
     state: 'Kerala',
     pincode: '673631',
     country: 'India',
-    full: 'FM 5/995, Farook Hospital Complex, P.O. Feroke, Calicut – 673631, Kerala, India.',
+    full: 'FM 5/995, 1st Floor, Farook Hospital Complex, P.O. Feroke, Calicut (Kozhikode) – 673631, Kerala',
   },
   gstin: '32GDMPS7866H2ZR',
   whatsappNumber: '919947333150',
   displayWhatsApp: '+91 99473 33150',
-  whatsappMessage: 'Hello K S Associates, I would like to enquire about your civil engineering and construction services.',
+  whatsappMessage:
+    'Hello K S Associates, I would like to enquire about your civil engineering and construction services.',
   socialLinks: {
     instagram: '',
     facebook: '',
@@ -188,8 +191,8 @@ export const SERVICES: ServiceItem[] = [
       'Elevation Analysis & Volumetric Articulation',
       'Conversion of 2D CAD Plans into 3D Architectural Perspectives',
     ],
-    image: bcroadRender,
-    thumbnailWebp: bcroadThumbWebp,
+    image: commercialBcroadImg,
+    thumbnailWebp: commercialBcroadWebp,
     highlightText: 'Photorealistic Exterior Visualization & Volumetric Studies',
   },
 ];
@@ -204,7 +207,13 @@ export interface DrawingItem {
 export interface ProjectItem {
   id: string;
   title: string;
-  projectType: 'Commercial Building' | 'Apartment Building' | 'Residential Building' | 'Villa Project' | 'Structural Works' | 'Architectural Visualization';
+  projectType:
+    | 'Commercial Building'
+    | 'Apartment Building'
+    | 'Residential Building'
+    | 'Villa Project'
+    | 'Structural Works'
+    | 'Architectural Visualization';
   category: 'construction' | 'survey' | '3d-design';
   status: 'Proposed' | 'Completed' | 'Ongoing';
   location: string;
@@ -220,12 +229,12 @@ export interface ProjectItem {
   totalArea?: string;
   availableMaterials: string[];
   description: string;
+  hasBlueprintPlaceholder?: boolean;
   subcontractDetails?: {
     certifyingAuthority: string;
     certificationDate: string;
     mainContractorNotes: string;
   };
-  copyrightNotice?: string;
 }
 
 export const PROJECTS: ProjectItem[] = [
@@ -241,10 +250,30 @@ export const PROJECTS: ProjectItem[] = [
     thumbnailWebp: bcroadThumbWebp,
     cadDrawing: bcroadFloorPlanGf,
     drawings: [
-      { label: '3D Exterior Visualization', type: 'render', image: bcroadRender, caption: 'Illikkal Building commercial storefront with glass facade and illuminated interior' },
-      { label: 'Ground Floor Plan (76.91 sqm)', type: 'floorplan', image: bcroadFloorPlanGf, caption: 'Shop 1 (3.00x6.00m), Shop 2 (3.00x4.40m), Shop 3 (3.00x6.00m), Twin Toilets' },
-      { label: 'First Floor Plan (100.68 sqm)', type: 'floorplan', image: bcroadFloorPlanFf, caption: 'First Floor commercial layout, front passage and toilet' },
-      { label: 'Site Plan & Road Network', type: 'siteplan', image: bcroadSitePlan, caption: 'Access from Military Road, to Beypore Beach, Cheruvannur Road & 4 car parks' },
+      {
+        label: '3D Exterior Visualization',
+        type: 'render',
+        image: bcroadRender,
+        caption: 'Illikkal Building commercial storefront with glass facade and illuminated interior',
+      },
+      {
+        label: 'Ground Floor Plan (76.91 sqm)',
+        type: 'floorplan',
+        image: bcroadFloorPlanGf,
+        caption: 'Shop 1 (3.00x6.00m), Shop 2 (3.00x4.40m), Shop 3 (3.00x6.00m), Twin Toilets',
+      },
+      {
+        label: 'First Floor Plan (100.68 sqm)',
+        type: 'floorplan',
+        image: bcroadFloorPlanFf,
+        caption: 'First Floor commercial layout, front passage and toilet',
+      },
+      {
+        label: 'Site Plan & Road Network',
+        type: 'siteplan',
+        image: bcroadSitePlan,
+        caption: 'Access from Military Road, to Beypore Beach, Cheruvannur Road & 4 car parks',
+      },
     ],
     areaDetails: [
       { label: 'Ground Floor', area: '76.91 sqm' },
@@ -274,9 +303,24 @@ export const PROJECTS: ProjectItem[] = [
     thumbnailWebp: chungamThumbWebp,
     cadDrawing: chungamFloorPlan,
     drawings: [
-      { label: '3D Exterior Render', type: 'render', image: chungamRender, caption: 'Night lighting architectural visualization with balanced balconies and entrance stairway' },
-      { label: 'Ground & 1st Floor Plan', type: 'floorplan', image: chungamFloorPlan, caption: 'Dual living units per floor with living, dining, kitchen, and attached bedrooms' },
-      { label: 'Site Plan & Boundaries', type: 'siteplan', image: chungamSitePlan, caption: 'Municipality Road & Private Road boundaries, 490.16 m2 total plot calculation' },
+      {
+        label: '3D Exterior Render',
+        type: 'render',
+        image: chungamRender,
+        caption: 'Night lighting architectural visualization with balanced balconies and entrance stairway',
+      },
+      {
+        label: 'Ground & 1st Floor Plan',
+        type: 'floorplan',
+        image: chungamFloorPlan,
+        caption: 'Dual living units per floor with living, dining, kitchen, and attached bedrooms',
+      },
+      {
+        label: 'Site Plan & Boundaries',
+        type: 'siteplan',
+        image: chungamSitePlan,
+        caption: 'Municipality Road & Private Road boundaries, 490.16 m2 total plot calculation',
+      },
     ],
     areaDetails: [
       { label: 'Ground Floor Area', area: '1,555.25 sqft (144.54 m²)' },
@@ -307,9 +351,24 @@ export const PROJECTS: ProjectItem[] = [
     thumbnailWebp: idimuzhikkalThumbWebp,
     cadDrawing: idimuzhikkalFloorPlan,
     drawings: [
-      { label: '3D Exterior Visualization', type: 'render', image: idimuzhikkalRender, caption: 'Modern Kerala fusion home with terracotta tiled pitch roof and double-height arched window' },
-      { label: 'Ground & 1st Floor Plan', type: 'floorplan', image: idimuzhikkalFloorPlan, caption: 'Sitout, living, courtyard, dining, kitchen, attached bedrooms & upper open terrace' },
-      { label: 'Site Plan & Setback Lines', type: 'siteplan', image: idimuzhikkalSitePlan, caption: 'Road and drain boundary offsets with angular plot layout' },
+      {
+        label: '3D Exterior Visualization',
+        type: 'render',
+        image: idimuzhikkalRender,
+        caption: 'Modern Kerala fusion home with terracotta tiled pitch roof and double-height arched window',
+      },
+      {
+        label: 'Ground & 1st Floor Plan',
+        type: 'floorplan',
+        image: idimuzhikkalFloorPlan,
+        caption: 'Sitout, living, courtyard, dining, kitchen, attached bedrooms & upper open terrace',
+      },
+      {
+        label: 'Site Plan & Setback Lines',
+        type: 'siteplan',
+        image: idimuzhikkalSitePlan,
+        caption: 'Road and drain boundary offsets with angular plot layout',
+      },
     ],
     areaDetails: [
       { label: 'Ground Floor Area', area: '1,084.00 sqft' },
@@ -337,9 +396,24 @@ export const PROJECTS: ProjectItem[] = [
     thumbnailWebp: royalVillaThumbWebp,
     cadDrawing: royalVillaFloorPlan,
     drawings: [
-      { label: '3D Exterior Visualization', type: 'render', image: royalVillaRender, caption: 'Grand contemporary facade with vertical hanging gardens, timber eaves, and Royal Villa gate' },
-      { label: 'Ground & 1st Floor Plan', type: 'floorplan', image: royalVillaFloorPlan, caption: 'Foyer, living, dining, open kitchen, sitout, and master bedrooms' },
-      { label: 'Site Plan & Master Layout', type: 'siteplan', image: royalVillaSitePlan, caption: 'Municipality road (3.0M and 2.8M wide) frontage and access' },
+      {
+        label: '3D Exterior Visualization',
+        type: 'render',
+        image: royalVillaRender,
+        caption: 'Grand contemporary facade with vertical hanging gardens, timber eaves, and Royal Villa gate',
+      },
+      {
+        label: 'Ground & 1st Floor Plan',
+        type: 'floorplan',
+        image: royalVillaFloorPlan,
+        caption: 'Foyer, living, dining, open kitchen, sitout, and master bedrooms',
+      },
+      {
+        label: 'Site Plan & Master Layout',
+        type: 'siteplan',
+        image: royalVillaSitePlan,
+        caption: 'Municipality road (3.0M and 2.8M wide) frontage and access',
+      },
     ],
     areaDetails: [
       { label: 'Ground Floor Plan', area: '945.69 sqft' },
@@ -357,6 +431,39 @@ export const PROJECTS: ProjectItem[] = [
       'A prestigious contemporary villa proposal at Feroke, Calicut. The actual 3D render displays the prominent "Royal Villa" entrance pillar, rich tropical cantilevered timber soffits, lush vertical hanging planters along the upper balcony, and a soaring double-height glass stair volume.',
   },
   {
+    id: 'govt-iti-tuneri',
+    title: 'Govt. ITI Building SC Development, Tuneri',
+    projectType: 'Structural Works',
+    category: 'construction',
+    status: 'Completed',
+    location: 'Tuneri, Kozhikode, Kerala',
+    verified: true,
+    image: constructionRccImg,
+    thumbnailWebp: constructionRccWebp,
+    drawings: [
+      {
+        label: 'RCC Structural Execution',
+        type: 'render',
+        image: constructionRccImg,
+        caption: 'Reinforced cement concrete foundations, columns, beams, and slabs executed under subcontract',
+      },
+    ],
+    availableMaterials: [
+      'RCC Foundations & Substructure Works',
+      'Structural Columns & Load-Bearing Frame',
+      'Floor & Roof Beams Execution',
+      'Suspended Structural RCC Slabs',
+    ],
+    subcontractDetails: {
+      certifyingAuthority: 'Selmec Engineering Construction',
+      certificationDate: '30 April 2026',
+      mainContractorNotes:
+        'Subcontract structural works executed in accordance with approved engineering drawings, technical specifications, and scheduled coordination.',
+    },
+    description:
+      'Completed structural civil subcontract works for the Construction of Govt. ITI Building for SC Development at Tuneri, Kerala. Scope included reinforced cement concrete (RCC) foundations, columns, beams, and slabs certified by Selmec Engineering Construction on 30 April 2026.',
+  },
+  {
     id: 'ponnani-residential-archival',
     title: 'Residential Project at Ponnani',
     projectType: 'Residential Building',
@@ -366,15 +473,14 @@ export const PROJECTS: ProjectItem[] = [
     verified: true,
     image: genericCadDrawing,
     thumbnailWebp: genericCadDrawingWebp,
+    hasBlueprintPlaceholder: true,
     availableMaterials: [
-      'Ground Floor Plan (Archived)',
-      'First Floor Plan (Archived)',
-      'Room Layouts & Dimensions (Archived)',
+      'Ground Floor Plan (Available on Request)',
+      'First Floor Plan (Available on Request)',
+      'Room Layouts & Dimensions (Available on Request)',
     ],
-    copyrightNotice:
-      'Copyright Archival Notice: The supplied Ponnani project drawings contain an intellectual property notice identifying them as property of Quesa Developers Pvt Ltd. In accordance with strict ethical and legal guidelines, architectural drawings are held in archive and withheld from public publication pending confirmed third-party clearance.',
     description:
-      'Architectural planning and dimensional layout for a residential building at Ponnani. The project file includes ground and upper floor layouts with detailed room dimensions, currently maintained in the firm’s confidential records under professional IP protection standards.',
+      'Architectural planning and dimensional layout for a residential building at Ponnani. Detailed ground and upper floor layouts with room dimensions have been prepared and can be shared upon direct request through our office.',
   },
 ];
 
@@ -395,8 +501,8 @@ export const CREDENTIALS_DATA = {
       'Suspended Structural RCC Slabs',
     ],
     verificationStatement:
-      'The certificate officially attests that K S Associates performed the specified structural execution in accordance with approved engineering drawings, rigorous civil specifications, and demonstrated coordinated scheduling adherence.',
+      'The certificate attests that K S Associates performed the specified structural execution in accordance with approved engineering drawings, civil specifications, and scheduled coordination.',
     noteOnISO:
-      'Important Note: The ISO 9001:2015 certification belongs to the certifying issuing authority, Selmec Engineering Construction. K S Associates is proud of its verified partnership on major public infrastructure.',
+      'ISO 9001:2015 certification belongs to the issuing authority, Selmec Engineering Construction, not K S Associates.',
   },
 };

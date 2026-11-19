@@ -1,7 +1,7 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- * K S Associates – Corporate Website Application Root (Refined Standard)
+ * K S Associates – Corporate Website Application Root
  */
 
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
@@ -11,7 +11,14 @@ import { WhatsAppButton } from './components/WhatsAppButton';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Home } from './pages/Home';
 import { PROJECTS, ProjectItem } from './data/company';
-import { PageRoute, ServiceCategory, getRoutePath, parseRouteFromLocation } from './types/app';
+import {
+  AppRoute,
+  PageRoute,
+  ServiceCategory,
+  getRoutePath,
+  parseProjectIdFromPathname,
+  parseRouteFromLocation,
+} from './types/app';
 import { ArrowUp } from 'lucide-react';
 import { updatePageSeo } from './utils/seo';
 
@@ -19,6 +26,7 @@ const About = lazy(() => import('./pages/About').then((m) => ({ default: m.About
 const Services = lazy(() => import('./pages/Services').then((m) => ({ default: m.Services })));
 const Projects = lazy(() => import('./pages/Projects').then((m) => ({ default: m.Projects })));
 const Contact = lazy(() => import('./pages/Contact').then((m) => ({ default: m.Contact })));
+const NotFound = lazy(() => import('./pages/NotFound').then((m) => ({ default: m.NotFound })));
 const ProjectLightbox = lazy(() =>
   import('./components/ProjectLightbox').then((m) => ({ default: m.ProjectLightbox }))
 );
@@ -26,22 +34,54 @@ const ContactModal = lazy(() =>
   import('./components/ContactModal').then((m) => ({ default: m.ContactModal }))
 );
 
-function getInitialRoute(): PageRoute {
-  if (typeof window === 'undefined') return 'home';
-  return parseRouteFromLocation(window.location.pathname, window.location.hash);
+function resolveInitialLocation(): { route: AppRoute; project: ProjectItem | null } {
+  if (typeof window === 'undefined') {
+    return { route: 'home', project: null };
+  }
+  const projectSlug = parseProjectIdFromPathname(window.location.pathname);
+  if (projectSlug) {
+    const matched = PROJECTS.find((p) => p.id === projectSlug);
+    if (matched) {
+      return { route: 'projects', project: matched };
+    }
+    return { route: 'not-found', project: null };
+  }
+  return {
+    route: parseRouteFromLocation(window.location.pathname, window.location.hash),
+    project: null,
+  };
+}
+
+function scrollToSectionWithRetry(sectionId: string, attemptsLeft = 10) {
+  const el = document.getElementById(sectionId);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+  if (attemptsLeft > 0) {
+    window.setTimeout(() => scrollToSectionWithRetry(sectionId, attemptsLeft - 1), 80);
+  }
 }
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<PageRoute>(getInitialRoute);
-  const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
+  const [initialState] = useState(resolveInitialLocation);
+  const [currentPage, setCurrentPage] = useState<AppRoute>(initialState.route);
+  const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(initialState.project);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [contactDefaultService, setContactDefaultService] = useState<ServiceCategory | ''>('');
   const [showBackToTop, setShowBackToTop] = useState(false);
 
-  // Synchronize browser history (popstate) and legacy hash changes
+  // Synchronize browser history (popstate) and hash changes
   useEffect(() => {
     const syncRoute = () => {
-      setCurrentPage(parseRouteFromLocation(window.location.pathname, window.location.hash));
+      const next = resolveInitialLocation();
+      setCurrentPage(next.route);
+      setSelectedProject(next.project);
+
+      const hashId = window.location.hash.replace(/^#/, '');
+      if (next.route === 'services' && hashId) {
+        scrollToSectionWithRetry(hashId);
+      }
     };
 
     window.addEventListener('popstate', syncRoute);
@@ -52,7 +92,7 @@ export default function App() {
     };
   }, []);
 
-  // Dynamically update document title, canonical URL, Open Graph & Twitter card metadata
+  // Dynamically update document title, canonical URL, robots directives, OG & Twitter metadata
   useEffect(() => {
     if (selectedProject) {
       updatePageSeo('projects', {
@@ -76,17 +116,25 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavigate = useCallback((page: PageRoute) => {
+  const handleNavigate = useCallback((page: PageRoute, hashSection?: string) => {
+    setSelectedProject(null);
     setCurrentPage(page);
-    const targetPath = getRoutePath(page);
-    if (window.location.pathname !== targetPath || window.location.hash) {
+    const targetPath = getRoutePath(page, hashSection);
+    const currentFull = `${window.location.pathname}${window.location.hash}`;
+
+    if (currentFull !== targetPath) {
       try {
         window.history.pushState(null, '', targetPath);
       } catch {
-        window.location.hash = page;
+        window.location.hash = hashSection || page;
       }
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (hashSection) {
+      scrollToSectionWithRetry(hashSection);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }, []);
 
   const handleOpenContactModal = useCallback((service?: ServiceCategory) => {
@@ -100,7 +148,29 @@ export default function App() {
 
   const handleCloseLightbox = useCallback(() => {
     setSelectedProject(null);
+    if (parseProjectIdFromPathname(window.location.pathname)) {
+      try {
+        window.history.pushState(null, '', getRoutePath('projects'));
+      } catch {
+        // Ignore history errors in restricted frames
+      }
+    }
   }, []);
+
+  const handleEnquireFromLightbox = useCallback(
+    (project: ProjectItem) => {
+      setSelectedProject(null);
+      if (project.category === 'construction') {
+        setContactDefaultService('Construction');
+      } else if (project.category === 'survey') {
+        setContactDefaultService('Survey');
+      } else {
+        setContactDefaultService('3D Design');
+      }
+      handleNavigate('contact');
+    },
+    [handleNavigate]
+  );
 
   const handleScrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -127,7 +197,15 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen flex flex-col bg-[#F5F4EF] text-[#292B27] antialiased selection:bg-[#C6A65B] selection:text-[#292B27]">
+      <div className="min-h-screen flex flex-col bg-[#F5F4EF] text-[#292B27] antialiased selection:bg-[#C6A65B] selection:text-[#292B27] overflow-x-clip">
+        {/* Skip to Main Content Accessibility Link */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-4 focus:py-2.5 focus:bg-[#C6A65B] focus:text-[#292B27] focus:font-semibold focus:text-xs focus:uppercase focus:tracking-wider focus:rounded-[3px] focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#343A24]"
+        >
+          Skip to main content
+        </a>
+
         {/* Global Navigation */}
         <Navbar
           currentPage={currentPage}
@@ -136,7 +214,7 @@ export default function App() {
         />
 
         {/* Main Content Router */}
-        <main className="flex-1">
+        <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">
           {currentPage === 'home' && (
             <Home
               onNavigate={handleNavigate}
@@ -148,7 +226,7 @@ export default function App() {
           {currentPage !== 'home' && (
             <Suspense
               fallback={
-                <div className="pt-40 pb-24 text-center text-xs uppercase tracking-widest text-[#77786F]">
+                <div className="pt-40 pb-24 text-center text-xs uppercase tracking-widest text-[#595B53]">
                   Loading Section...
                 </div>
               }
@@ -163,15 +241,18 @@ export default function App() {
                 <Services
                   onNavigate={handleNavigate}
                   onOpenContactModal={handleOpenContactModal}
+                  onOpenProjectModal={setSelectedProject}
                 />
               )}
               {currentPage === 'projects' && (
                 <Projects
                   onOpenProjectModal={setSelectedProject}
                   onOpenContactModal={() => handleOpenContactModal()}
+                  onNavigate={handleNavigate}
                 />
               )}
               {currentPage === 'contact' && <Contact />}
+              {currentPage === 'not-found' && <NotFound onNavigate={handleNavigate} />}
             </Suspense>
           )}
         </main>
@@ -182,12 +263,12 @@ export default function App() {
         {/* Floating WhatsApp Action Button */}
         <WhatsAppButton />
 
-        {/* Back to Top Button with 2px radius and restrained styling */}
+        {/* Back to Top Button */}
         {showBackToTop && (
           <button
             type="button"
             onClick={handleScrollToTop}
-            className="fixed bottom-6 left-6 z-40 w-9 h-9 rounded-[2px] bg-[#343A24] text-[#C6A65B] border border-[#C6A65B]/30 flex items-center justify-center hover:bg-[#242918] transition-colors duration-150 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A65B]"
+            className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-40 min-w-[44px] min-h-[44px] w-11 h-11 rounded-[2px] bg-[#343A24] text-[#C6A65B] border border-[#C6A65B]/35 flex items-center justify-center hover:bg-[#242918] transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C6A65B]"
             aria-label="Back to top"
             title="Back to top"
           >
@@ -203,6 +284,7 @@ export default function App() {
               onClose={handleCloseLightbox}
               onNavigateNext={handleNextProject}
               onNavigatePrev={handlePrevProject}
+              onEnquireProject={handleEnquireFromLightbox}
             />
           </Suspense>
         )}

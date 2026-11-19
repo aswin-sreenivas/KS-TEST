@@ -1,7 +1,7 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- * K S Associates – Corporate Contact & Consultation Desk (Refined Standard)
+ * K S Associates – Corporate Contact & Consultation Desk
  */
 
 import React from 'react';
@@ -13,16 +13,16 @@ import {
   MapPin,
   FileText,
   ExternalLink,
-  MessageSquare
+  MessageSquare,
 } from 'lucide-react';
 
 export const Contact: React.FC = () => {
   const mapEmbedUrl = `https://www.google.com/maps?q=${COMPANY_INFO.coordinates.lat},${COMPANY_INFO.coordinates.lng}&z=17&hl=en&output=embed`;
 
   return (
-    <div className="w-full pt-28 pb-20">
+    <div className="w-full pt-28 pb-24 sm:pb-20">
       {/* Header Banner */}
-      <section className="bg-[#343A24] text-white py-16 sm:py-20 mb-16 border-b border-[#C6A65B]/20">
+      <section className="bg-[#343A24] text-white py-16 sm:py-20 mb-14 border-b border-[#C6A65B]/20">
         <div className="corporate-container">
           <div className="max-w-3xl space-y-3">
             <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#C6A65B]">
@@ -39,17 +39,17 @@ export const Contact: React.FC = () => {
       </section>
 
       <div className="corporate-container space-y-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
           {/* Official Information Column */}
           <div className="lg:col-span-5 space-y-6">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-widest text-[#C6A65B]">
+              <span className="text-xs font-semibold uppercase tracking-widest text-[#9B7E38]">
                 Official Registered Office
               </span>
               <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-[#343A24] mt-1">
                 {COMPANY_INFO.fullName}
               </h2>
-              <p className="text-xs uppercase tracking-wider font-semibold text-[#C6A65B] mt-1">
+              <p className="text-xs uppercase tracking-wider font-semibold text-[#9B7E38] mt-1">
                 {COMPANY_INFO.tagline}
               </p>
             </div>
@@ -62,14 +62,16 @@ export const Contact: React.FC = () => {
                   <Phone className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[11px] uppercase tracking-wider text-[#77786F]">Primary Contact Number</div>
+                  <div className="text-[11px] uppercase tracking-wider text-[#595B53]">
+                    Call (Primary Contact Number)
+                  </div>
                   <a
                     href={`tel:${COMPANY_INFO.phone}`}
-                    className="text-base font-numeric font-bold text-[#292B27] hover:text-[#C6A65B] transition-colors"
+                    className="min-h-[44px] inline-flex items-center text-base font-numeric font-bold text-[#292B27] hover:text-[#9B7E38] transition-colors"
                   >
                     {COMPANY_INFO.displayPhone}
                   </a>
-                  <p className="text-xs text-[#77786F] mt-0.5">
+                  <p className="text-xs text-[#595B53]">
                     Available for consultations, site visits, and project enquiries.
                   </p>
                 </div>
@@ -81,18 +83,20 @@ export const Contact: React.FC = () => {
                   <MessageSquare className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[11px] uppercase tracking-wider text-[#77786F]">Official WhatsApp</div>
+                  <div className="text-[11px] uppercase tracking-wider text-[#595B53]">
+                    WhatsApp (Official Desk)
+                  </div>
                   <a
                     href={`https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
                       COMPANY_INFO.whatsappMessage
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-base font-numeric font-bold text-[#292B27] hover:text-[#25D366] transition-colors"
+                    className="min-h-[44px] inline-flex items-center text-base font-numeric font-bold text-[#292B27] hover:text-[#15803D] transition-colors"
                   >
                     {COMPANY_INFO.displayWhatsApp}
                   </a>
-                  <p className="text-xs text-[#77786F] mt-0.5">
+                  <p className="text-xs text-[#595B53]">
                     Instant messaging for drawings, site surveys, and quotes.
                   </p>
                 </div>
@@ -103,16 +107,18 @@ export const Contact: React.FC = () => {
                 <div className="w-9 h-9 rounded-[2px] bg-[#343A24] text-[#C6A65B] flex items-center justify-center shrink-0">
                   <Mail className="w-4 h-4" />
                 </div>
-                <div className="overflow-hidden">
-                  <div className="text-[11px] uppercase tracking-wider text-[#77786F]">Official Email</div>
+                <div className="min-w-0 overflow-hidden">
+                  <div className="text-[11px] uppercase tracking-wider text-[#595B53]">
+                    Official Email
+                  </div>
                   <a
                     href={`mailto:${COMPANY_INFO.email}`}
-                    className="text-sm font-semibold text-[#292B27] hover:text-[#C6A65B] transition-colors break-all"
+                    className="min-h-[44px] inline-flex items-center text-sm font-semibold text-[#292B27] hover:text-[#9B7E38] transition-colors break-all"
                   >
                     {COMPANY_INFO.email}
                   </a>
-                  <p className="text-xs text-[#77786F] mt-0.5">
-                    Send tender documents, architectural CAD files, and inquiries.
+                  <p className="text-xs text-[#595B53]">
+                    Send tender documents, architectural CAD files, and enquiries.
                   </p>
                 </div>
               </div>
@@ -123,13 +129,17 @@ export const Contact: React.FC = () => {
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[11px] uppercase tracking-wider text-[#77786F]">Office Location</div>
-                  <p className="text-sm text-[#292B27] leading-relaxed font-medium">
+                  <div className="text-[11px] uppercase tracking-wider text-[#595B53]">
+                    Office Location
+                  </div>
+                  <p className="text-sm text-[#292B27] leading-relaxed font-medium mt-1">
                     {COMPANY_INFO.address.line1}, {COMPANY_INFO.address.landmark}
                     <br />
                     {COMPANY_INFO.address.postOffice}, {COMPANY_INFO.address.city} – {COMPANY_INFO.address.pincode}
                     <br />
-                    <span className="text-[#77786F] font-normal">{COMPANY_INFO.address.state}, {COMPANY_INFO.address.country}</span>
+                    <span className="text-[#595B53] font-normal">
+                      {COMPANY_INFO.address.state}, {COMPANY_INFO.address.country}
+                    </span>
                   </p>
                 </div>
               </div>
@@ -140,11 +150,13 @@ export const Contact: React.FC = () => {
                   <FileText className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[11px] uppercase tracking-wider text-[#77786F]">Tax Registration</div>
-                  <p className="text-sm font-numeric font-bold text-[#292B27]">
+                  <div className="text-[11px] uppercase tracking-wider text-[#595B53]">
+                    Tax Registration
+                  </div>
+                  <p className="text-sm font-numeric font-bold text-[#292B27] mt-1">
                     GSTIN: {COMPANY_INFO.gstin}
                   </p>
-                  <p className="text-xs text-[#77786F] mt-0.5">
+                  <p className="text-xs text-[#595B53] mt-0.5">
                     Official Goods & Services Tax identification number.
                   </p>
                 </div>
@@ -153,15 +165,15 @@ export const Contact: React.FC = () => {
           </div>
 
           {/* Form Column */}
-          <div className="lg:col-span-7 bg-white p-8 sm:p-10 rounded-[2px] border border-[#292B27]/12 space-y-6">
+          <div className="lg:col-span-7 bg-white p-6 sm:p-10 rounded-[2px] border border-[#292B27]/12 space-y-6">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-widest text-[#C6A65B]">
+              <span className="text-xs font-semibold uppercase tracking-widest text-[#9B7E38]">
                 Project Consultation Form
               </span>
               <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-[#343A24] mt-1">
                 Send Us an Enquiry
               </h2>
-              <p className="text-xs sm:text-sm text-[#77786F] mt-1">
+              <p className="text-xs sm:text-sm text-[#595B53] mt-1">
                 Select your required service (Construction, Survey, or 3D Design) and share your project details.
               </p>
             </div>
@@ -177,7 +189,7 @@ export const Contact: React.FC = () => {
               <h2 className="font-heading font-semibold text-xl text-[#343A24]">
                 Office Location Map
               </h2>
-              <p className="text-xs text-[#77786F]">
+              <p className="text-xs text-[#595B53]">
                 {COMPANY_INFO.address.landmark}, Feroke, Calicut, {COMPANY_INFO.address.state} – {COMPANY_INFO.address.pincode}
               </p>
             </div>
@@ -185,10 +197,10 @@ export const Contact: React.FC = () => {
               href={COMPANY_INFO.mapUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-[#C6A65B] hover:text-[#292B27] font-medium flex items-center gap-1 transition-colors"
+              className="min-h-[44px] inline-flex items-center gap-1.5 text-xs text-[#9B7E38] hover:text-[#292B27] font-semibold transition-colors"
             >
               <span>Open in Google Maps</span>
-              <ExternalLink className="w-3 h-3" />
+              <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
 

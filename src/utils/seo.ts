@@ -4,8 +4,11 @@
  * K S Associates – Centralized SEO Metadata, JSON-LD Schema & Social Card Manager
  */
 
-import { PageRoute, getRoutePath, isValidPageRoute } from '../types/app';
+import { AppRoute, PageRoute, getRoutePath, isValidPageRoute } from '../types/app';
 import { COMPANY_INFO } from '../data/company';
+import { IS_STAGING, OFFICIAL_SITE_ORIGIN } from '../config/site';
+
+export { IS_STAGING, OFFICIAL_SITE_ORIGIN };
 
 export interface PageSeoConfig {
   title: string;
@@ -16,9 +19,7 @@ export interface PageSeoConfig {
   type: string;
 }
 
-export const OFFICIAL_SITE_ORIGIN = 'https://ksassociatesengineeringconstructionsurvey.com';
-
-export const PAGE_SEO: Record<PageRoute, PageSeoConfig> = {
+export const PAGE_SEO: Record<AppRoute, PageSeoConfig> = {
   home: {
     title: 'K S Associates | Construction Company in Feroke, Kozhikode – Survey & 3D Design',
     description:
@@ -64,21 +65,56 @@ export const PAGE_SEO: Record<PageRoute, PageSeoConfig> = {
     breadcrumbName: 'Contact',
     type: 'website',
   },
+  'not-found': {
+    title: 'Page Not Found (404) | K S Associates',
+    description:
+      'The requested page could not be found on K S Associates – Engineering Construction, Land Surveying & 3D Design in Feroke, Calicut.',
+    image: '/og-image.jpg',
+    imageAlt: 'K S Associates – Engineering Construction & Surveying',
+    breadcrumbName: 'Page Not Found',
+    type: 'website',
+  },
 };
 
-export function getPageSeoConfig(pageKey: string): { route: PageRoute; config: PageSeoConfig; canonicalUrl: string; absoluteImageUrl: string } {
-  const route: PageRoute = isValidPageRoute(pageKey) ? pageKey : 'home';
+export function getRobotsDirective(route: AppRoute): string {
+  if (IS_STAGING || route === 'not-found') {
+    return 'noindex, nofollow';
+  }
+  return 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+}
+
+export function getPageSeoConfig(pageKey: string): {
+  route: AppRoute;
+  config: PageSeoConfig;
+  canonicalUrl: string;
+  absoluteImageUrl: string;
+  robotsContent: string;
+} {
+  const route: AppRoute =
+    pageKey === 'not-found'
+      ? 'not-found'
+      : isValidPageRoute(pageKey)
+        ? pageKey
+        : 'home';
+
   const config = PAGE_SEO[route];
-  const canonicalUrl = `${OFFICIAL_SITE_ORIGIN}${getRoutePath(route)}`;
+  const canonicalPath = route === 'not-found' ? '/' : getRoutePath(route as PageRoute);
+  const canonicalUrl = `${OFFICIAL_SITE_ORIGIN}${canonicalPath}`;
   const absoluteImageUrl =
     config.image.startsWith('http') || config.image.startsWith('data:')
       ? config.image
       : `${OFFICIAL_SITE_ORIGIN}${config.image.startsWith('/') ? config.image : `/${config.image}`}`;
 
-  return { route, config, canonicalUrl, absoluteImageUrl };
+  return {
+    route,
+    config,
+    canonicalUrl,
+    absoluteImageUrl,
+    robotsContent: getRobotsDirective(route),
+  };
 }
 
-export function buildPageJsonLd(pageKey: PageRoute): Record<string, unknown> {
+export function buildPageJsonLd(pageKey: AppRoute): Record<string, unknown> {
   const { config, canonicalUrl } = getPageSeoConfig(pageKey);
   const orgId = `${OFFICIAL_SITE_ORIGIN}/#organization`;
   const websiteId = `${OFFICIAL_SITE_ORIGIN}/#website`;
@@ -92,7 +128,7 @@ export function buildPageJsonLd(pageKey: PageRoute): Record<string, unknown> {
     },
   ];
 
-  if (pageKey !== 'home') {
+  if (pageKey !== 'home' && pageKey !== 'not-found') {
     breadcrumbItems.push({
       '@type': 'ListItem',
       position: 2,
@@ -222,7 +258,14 @@ export function buildPageJsonLd(pageKey: PageRoute): Record<string, unknown> {
         inLanguage: 'en-IN',
       },
       {
-        '@type': pageKey === 'contact' ? 'ContactPage' : pageKey === 'about' ? 'AboutPage' : pageKey === 'projects' ? 'CollectionPage' : 'WebPage',
+        '@type':
+          pageKey === 'contact'
+            ? 'ContactPage'
+            : pageKey === 'about'
+              ? 'AboutPage'
+              : pageKey === 'projects'
+                ? 'CollectionPage'
+                : 'WebPage',
         '@id': `${canonicalUrl}#webpage`,
         url: canonicalUrl,
         name: config.title,
@@ -268,11 +311,20 @@ function setCanonicalTag(url: string) {
 }
 
 export function updatePageSeo(pageKey: string, customConfig?: Partial<PageSeoConfig>) {
-  const { route, config: baseConfig, canonicalUrl, absoluteImageUrl } = getPageSeoConfig(pageKey);
+  const {
+    route,
+    config: baseConfig,
+    canonicalUrl,
+    absoluteImageUrl,
+    robotsContent,
+  } = getPageSeoConfig(pageKey);
   const config = { ...baseConfig, ...customConfig };
 
   document.title = config.title;
   setMetaTag('meta[name="description"]', 'content', config.description);
+  setMetaTag('meta[name="robots"]', 'content', robotsContent);
+  setMetaTag('meta[name="googlebot"]', 'content', robotsContent);
+  setMetaTag('meta[name="bingbot"]', 'content', robotsContent);
 
   setMetaTag('meta[property="og:title"]', 'content', config.title);
   setMetaTag('meta[property="og:description"]', 'content', config.description);

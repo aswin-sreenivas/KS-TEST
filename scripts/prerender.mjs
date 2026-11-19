@@ -4,6 +4,7 @@ import { pathToFileURL } from 'node:url';
 
 const rootDir = process.cwd();
 const distDir = path.join(rootDir, 'dist');
+const publicDir = path.join(rootDir, 'public');
 const ssrEntryPath = path.join(rootDir, '.prerender-dist', 'entry-prerender.js');
 const templatePath = path.join(distDir, 'index.html');
 
@@ -46,6 +47,25 @@ function replaceTagById(html, tag, id, attr, newValue) {
   return html.replace(pattern, `$1${escaped}$3`);
 }
 
+function buildRobotsTxtContent(isStaging, siteOrigin) {
+  if (isStaging) {
+    return ['User-agent: *', 'Disallow: /', ''].join('\n');
+  }
+  return [
+    'User-agent: *',
+    'Allow: /',
+    '',
+    'User-agent: Googlebot',
+    'Allow: /',
+    '',
+    'User-agent: Bingbot',
+    'Allow: /',
+    '',
+    `Sitemap: ${siteOrigin}/sitemap.xml`,
+    '',
+  ].join('\n');
+}
+
 async function main() {
   if (!fs.existsSync(templatePath)) {
     throw new Error('Client build output dist/index.html not found before prerendering.');
@@ -56,17 +76,25 @@ async function main() {
 
   const templateHtml = fs.readFileSync(templatePath, 'utf8');
   const ssrModule = await import(pathToFileURL(ssrEntryPath).href);
-  const { prerenderRoute, VALID_PAGE_ROUTES } = ssrModule;
+  const { prerenderRoute, VALID_PAGE_ROUTES, IS_STAGING, OFFICIAL_SITE_ORIGIN } = ssrModule;
 
+  // Synchronize robots.txt in both public/ and dist/ from the single IS_STAGING constant
+  const robotsTxt = buildRobotsTxtContent(Boolean(IS_STAGING), OFFICIAL_SITE_ORIGIN);
+  fs.writeFileSync(path.join(publicDir, 'robots.txt'), robotsTxt, 'utf8');
+  fs.writeFileSync(path.join(distDir, 'robots.txt'), robotsTxt, 'utf8');
+  console.log(`Generated robots.txt (IS_STAGING=${Boolean(IS_STAGING)})`);
+
+  const routesToPrerender = [...VALID_PAGE_ROUTES, 'not-found'];
   const routeOutputPaths = {
     home: path.join(distDir, 'index.html'),
     about: path.join(distDir, 'about', 'index.html'),
     services: path.join(distDir, 'services', 'index.html'),
     projects: path.join(distDir, 'projects', 'index.html'),
     contact: path.join(distDir, 'contact', 'index.html'),
+    'not-found': path.join(distDir, '404.html'),
   };
 
-  for (const route of VALID_PAGE_ROUTES) {
+  for (const route of routesToPrerender) {
     const rendered = prerenderRoute(route);
     let pageHtml = templateHtml;
 
@@ -75,6 +103,9 @@ async function main() {
       () => `<title>${escapeHtmlText(rendered.title)}</title>`
     );
     pageHtml = replaceMetaContent(pageHtml, 'name', 'description', rendered.description);
+    pageHtml = replaceMetaContent(pageHtml, 'name', 'robots', rendered.robotsContent);
+    pageHtml = replaceMetaContent(pageHtml, 'name', 'googlebot', rendered.robotsContent);
+    pageHtml = replaceMetaContent(pageHtml, 'name', 'bingbot', rendered.robotsContent);
     pageHtml = replaceTagById(pageHtml, 'link', 'canonical-url', 'href', rendered.canonicalUrl);
     pageHtml = replaceTagById(pageHtml, 'meta', 'og-url', 'content', rendered.canonicalUrl);
     pageHtml = replaceMetaContent(pageHtml, 'property', 'og:title', rendered.title);
@@ -114,7 +145,9 @@ async function main() {
     const outPath = routeOutputPaths[route];
     fs.mkdirSync(path.dirname(outPath), { recursive: true });
     fs.writeFileSync(outPath, pageHtml, 'utf8');
-    console.log(`Prerendered /${route === 'home' ? '' : `${route}/`} -> ${path.relative(rootDir, outPath)} (${rendered.canonicalUrl})`);
+    console.log(
+      `Prerendered ${route === 'not-found' ? '/404.html' : route === 'home' ? '/' : `/${route}/`} -> ${path.relative(rootDir, outPath)} (${rendered.robotsContent})`
+    );
   }
 }
 

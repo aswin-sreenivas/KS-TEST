@@ -1,7 +1,7 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- * K S Associates – Corporate Homepage (Refined Architectural Standard)
+ * K S Associates – Corporate Homepage
  */
 
 import React, { useState, useEffect } from 'react';
@@ -9,19 +9,21 @@ import { COMPANY_INFO, SERVICES, PROJECTS, ProjectItem, ServiceItem } from '../d
 import { PageRoute, ServiceCategory } from '../types/app';
 import heroImg1 from '@/src/assets/images/ks_hero_render_1793621473732.jpg';
 import heroImg2 from '@/src/assets/images/ks_hero_exterior_2_1793621489483.jpg';
+import introVillaImg from '@/src/assets/images/ks_royal_villa_1793621531673.jpg';
 import heroImg1Webp from '@/src/assets/optimized/ks_hero_render.webp';
 import heroImg2Webp from '@/src/assets/optimized/ks_hero_exterior_2.webp';
+import introVillaWebp from '@/src/assets/optimized/ks_royal_villa.webp';
 import {
   ArrowRight,
   Building2,
   Compass,
   Box,
   MapPin,
-  ArrowUpRight
+  ArrowUpRight,
 } from 'lucide-react';
 
 interface HomeProps {
-  onNavigate: (page: PageRoute) => void;
+  onNavigate: (page: PageRoute, hashSection?: string) => void;
   onOpenProjectModal: (project: ProjectItem) => void;
   onOpenContactModal: (service?: ServiceCategory) => void;
 }
@@ -30,12 +32,12 @@ const HERO_SLIDES = [
   {
     img: heroImg1,
     webp: heroImg1Webp,
-    caption: 'Contemporary Tropical Modernist Residence · 3D Exterior Architectural Visualization',
+    caption: 'Contemporary tropical modernist residence 3D exterior architectural visualization in Kerala',
   },
   {
     img: heroImg2,
     webp: heroImg2Webp,
-    caption: 'Cantilevered Architectural Pavilion Study · Volumetric Elevation Rendering',
+    caption: 'Cantilevered residential architectural pavilion volumetric elevation rendering in Calicut',
   },
 ] as const;
 
@@ -49,7 +51,7 @@ const ENGINEERING_PILLARS = [
   {
     title: 'Engineering-Focused Approach',
     description:
-      'Every proposal is guided by sound civil engineering principles, verified structural calculations, and rigorous technical review.',
+      'Every proposal is guided by sound civil engineering principles, systematic layout planning, and disciplined technical review.',
   },
   {
     title: 'Detailed Project Planning',
@@ -92,13 +94,13 @@ export const Home: React.FC<HomeProps> = ({
     return () => window.clearInterval(interval);
   }, []);
 
-  // Primary 4 actual projects from verified documents
+  // Primary 4 actual architectural projects from verified documents
   const featuredProjects = PROJECTS.slice(0, 4);
 
   return (
     <div className="w-full">
       {/* ===================== HERO SECTION ===================== */}
-      <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden bg-[#242918]">
+      <section className="relative min-h-[90vh] sm:min-h-[92vh] flex items-center justify-center overflow-hidden bg-[#242918]">
         {/* Full-Screen Architectural Background Slider */}
         {HERO_SLIDES.map((slide, idx) => (
           <div
@@ -127,10 +129,10 @@ export const Home: React.FC<HomeProps> = ({
         <div className="absolute inset-0 bg-gradient-to-t from-[#242918] via-[#242918]/50 to-black/55 pointer-events-none" />
 
         {/* Hero Content Container */}
-        <div className="relative z-10 corporate-container py-32 sm:py-36 flex flex-col justify-center min-h-[92vh]">
+        <div className="relative z-10 corporate-container py-28 sm:py-36 flex flex-col justify-center min-h-[90vh] sm:min-h-[92vh]">
           <div className="max-w-3xl space-y-6">
-            {/* Main Heading with Fancy Entry Attraction Font */}
-            <h1 className="font-fancy-entry font-bold text-4xl sm:text-6xl lg:text-[72px] text-white tracking-[0.02em] leading-[1.12] drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)]">
+            {/* Main Heading */}
+            <h1 className="font-fancy-entry font-bold text-3xl sm:text-6xl lg:text-[72px] text-white tracking-[0.02em] leading-[1.15] sm:leading-[1.12] drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)]">
               Building Trust. <br />
               <span className="text-[#DECA8D] font-bold">
                 Creating Landmarks.
@@ -142,12 +144,12 @@ export const Home: React.FC<HomeProps> = ({
               Civil engineering, planned construction, and precision surveying delivered with excellence, reliability, and strong foundations.
             </p>
 
-            {/* CTA Buttons with restrained 2-4px radius */}
-            <div className="pt-2 flex flex-col sm:flex-row items-center gap-3.5">
+            {/* CTA Buttons */}
+            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
               <button
                 type="button"
                 onClick={() => onNavigate('projects')}
-                className="w-full sm:w-auto px-4 py-2 bg-[#C6A65B] hover:bg-[#DECA8D] text-[#292B27] font-semibold text-[11px] uppercase tracking-wider rounded-[3px] transition-colors duration-150 flex items-center justify-center gap-1.5 focus:outline-none focus-visible:ring-1 focus-visible:ring-white"
+                className="min-h-[44px] w-full sm:w-auto px-5 py-3 bg-[#C6A65B] hover:bg-[#DECA8D] text-[#292B27] font-semibold text-xs uppercase tracking-wider rounded-[3px] transition-colors duration-150 flex items-center justify-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 <span>Explore Our Projects</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -156,25 +158,24 @@ export const Home: React.FC<HomeProps> = ({
               <button
                 type="button"
                 onClick={() => onOpenContactModal()}
-                className="w-full sm:w-auto px-4 py-2 bg-[#343A24]/90 hover:bg-[#343A24] text-white border border-[#C6A65B]/40 hover:border-[#C6A65B] font-medium text-[11px] uppercase tracking-wider rounded-[3px] transition-colors duration-150 flex items-center justify-center gap-1.5 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A65B]"
+                className="min-h-[44px] w-full sm:w-auto px-5 py-3 bg-[#343A24]/90 hover:bg-[#343A24] text-white border border-[#C6A65B]/45 hover:border-[#C6A65B] font-medium text-xs uppercase tracking-wider rounded-[3px] transition-colors duration-150 flex items-center justify-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C6A65B]"
               >
                 <span>Discuss Your Project</span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-[#C6A65B]" />
               </button>
             </div>
           </div>
-
         </div>
       </section>
 
       {/* ===================== COMPANY INTRODUCTION ===================== */}
-      <section id="intro-section" className="py-24 sm:py-28 bg-[#F5F4EF] border-b border-[#292B27]/10">
+      <section id="intro-section" className="py-20 sm:py-28 bg-[#F5F4EF] border-b border-[#292B27]/10">
         <div className="corporate-container">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             {/* Text Column */}
             <div className="lg:col-span-7 space-y-6">
               <div className="space-y-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#C6A65B]">
+                <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9B7E38]">
                   Engineering Practice · Feroke, Calicut
                 </span>
                 <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-heading font-semibold text-[#343A24] leading-tight">
@@ -199,7 +200,7 @@ export const Home: React.FC<HomeProps> = ({
                     <Building2 className="w-4 h-4 text-[#C6A65B] shrink-0" />
                     <span><span className="font-numeric">01.</span> Construction</span>
                   </div>
-                  <p className="text-xs text-[#77786F] leading-relaxed">
+                  <p className="text-xs text-[#595B53] leading-relaxed">
                     RCC foundations, columns, beams, slabs, and planned structural execution.
                   </p>
                 </div>
@@ -209,7 +210,7 @@ export const Home: React.FC<HomeProps> = ({
                     <Compass className="w-4 h-4 text-[#C6A65B] shrink-0" />
                     <span><span className="font-numeric">02.</span> Survey</span>
                   </div>
-                  <p className="text-xs text-[#77786F] leading-relaxed">
+                  <p className="text-xs text-[#595B53] leading-relaxed">
                     Topographic site measurement, boundary demarcation, and baseline setting.
                   </p>
                 </div>
@@ -219,7 +220,7 @@ export const Home: React.FC<HomeProps> = ({
                     <Box className="w-4 h-4 text-[#C6A65B] shrink-0" />
                     <span><span className="font-numeric">03.</span> 3D Design</span>
                   </div>
-                  <p className="text-xs text-[#77786F] leading-relaxed">
+                  <p className="text-xs text-[#595B53] leading-relaxed">
                     Photorealistic 3D exterior renders and spatial volumetric analysis.
                   </p>
                 </div>
@@ -229,7 +230,7 @@ export const Home: React.FC<HomeProps> = ({
                 <button
                   type="button"
                   onClick={() => onNavigate('about')}
-                  className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-semibold text-[#343A24] hover:text-[#C6A65B] transition-colors duration-150 group focus:outline-none focus-visible:ring-1 focus-visible:ring-[#343A24]"
+                  className="min-h-[44px] inline-flex items-center gap-2 text-xs uppercase tracking-widest font-semibold text-[#343A24] hover:text-[#9B7E38] transition-colors duration-150 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#343A24]"
                 >
                   <span>Learn About Our Approach & Credentials</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
@@ -237,15 +238,15 @@ export const Home: React.FC<HomeProps> = ({
               </div>
             </div>
 
-            {/* Architectural Visual Column */}
+            {/* Architectural Visual Column — Distinct image from Hero */}
             <div className="lg:col-span-5">
               <div className="relative">
                 <div className="aspect-[4/3] rounded-[2px] overflow-hidden border border-[#292B27]/12 shadow-sm">
                   <picture className="block w-full h-full">
-                    <source srcSet={heroImg2Webp} type="image/webp" />
+                    <source srcSet={introVillaWebp} type="image/webp" />
                     <img
-                      src={heroImg2}
-                      alt="Architectural 3D exterior elevation design study by K S Associates in Feroke, Calicut"
+                      src={introVillaImg}
+                      alt="Royal Villa contemporary architectural exterior concept in Feroke, Calicut by K S Associates"
                       width={1376}
                       height={768}
                       loading="lazy"
@@ -256,13 +257,13 @@ export const Home: React.FC<HomeProps> = ({
                 </div>
                 {/* Architectural Fact Plate */}
                 <div className="mt-4 p-4 bg-white rounded-[2px] border border-[#292B27]/10 text-xs text-[#4A4D46] space-y-1">
-                  <span className="text-[10px] uppercase tracking-wider text-[#C6A65B] block font-semibold">
+                  <span className="text-[10px] uppercase tracking-wider text-[#9B7E38] block font-semibold">
                     Documented Structural Subcontract Works
                   </span>
                   <p className="font-medium text-[#292B27]">
                     Govt. ITI Building SC Development, Tuneri, Kerala.
                   </p>
-                  <p className="text-[11px] text-[#77786F]">
+                  <p className="text-[11px] text-[#595B53]">
                     Certified execution of RCC foundations, columns, beams, and slabs.
                   </p>
                 </div>
@@ -273,10 +274,10 @@ export const Home: React.FC<HomeProps> = ({
       </section>
 
       {/* ===================== SERVICES OVERVIEW ===================== */}
-      <section className="py-24 sm:py-28 bg-white border-b border-[#292B27]/10">
+      <section className="py-20 sm:py-28 bg-white border-b border-[#292B27]/10">
         <div className="corporate-container">
           <div className="max-w-3xl mb-14 space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#C6A65B]">
+            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9B7E38]">
               Core Practice Areas
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-[40px] font-heading font-semibold text-[#343A24]">
@@ -287,7 +288,7 @@ export const Home: React.FC<HomeProps> = ({
             </p>
           </div>
 
-          {/* Exactly Three Primary Services in Structured Editorial Grid */}
+          {/* Exactly Three Primary Services */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {SERVICES.map((service) => (
               <div
@@ -326,11 +327,11 @@ export const Home: React.FC<HomeProps> = ({
                     </p>
                   </div>
 
-                  <div className="pt-4 border-t border-[#292B27]/10 flex items-center justify-between text-xs">
+                  <div className="pt-3 border-t border-[#292B27]/10 flex items-center justify-between text-xs">
                     <button
                       type="button"
-                      onClick={() => onNavigate('services')}
-                      className="uppercase tracking-wider font-semibold text-[#343A24] hover:text-[#C6A65B] transition-colors duration-150 flex items-center gap-1.5 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#343A24]"
+                      onClick={() => onNavigate('services', service.id)}
+                      className="min-h-[44px] uppercase tracking-wider font-semibold text-[#343A24] hover:text-[#9B7E38] transition-colors duration-150 flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#343A24]"
                     >
                       <span>Explore Service</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -338,7 +339,7 @@ export const Home: React.FC<HomeProps> = ({
                     <button
                       type="button"
                       onClick={() => onOpenContactModal(SERVICE_ID_TO_CATEGORY[service.id])}
-                      className="text-[#C6A65B] hover:text-[#292B27] font-medium transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#343A24]"
+                      className="min-h-[44px] px-2 text-[#9B7E38] hover:text-[#292B27] font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#343A24]"
                     >
                       Enquire
                     </button>
@@ -351,11 +352,11 @@ export const Home: React.FC<HomeProps> = ({
       </section>
 
       {/* ===================== FEATURED PROJECTS ===================== */}
-      <section className="py-24 sm:py-28 bg-[#F5F4EF] border-b border-[#292B27]/10">
+      <section className="py-20 sm:py-28 bg-[#F5F4EF] border-b border-[#292B27]/10">
         <div className="corporate-container">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-4">
             <div className="space-y-2 max-w-2xl">
-              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#C6A65B]">
+              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9B7E38]">
                 Selected Portfolio
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-[40px] font-heading font-semibold text-[#343A24]">
@@ -369,7 +370,7 @@ export const Home: React.FC<HomeProps> = ({
             <button
               type="button"
               onClick={() => onNavigate('projects')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#343A24] text-[#C6A65B] hover:bg-[#242918] text-xs font-semibold uppercase tracking-wider rounded-[3px] transition-colors duration-150 self-start md:self-auto focus:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A65B]"
+              className="min-h-[44px] inline-flex items-center gap-2 px-5 py-2.5 bg-[#343A24] text-[#C6A65B] hover:bg-[#242918] text-xs font-semibold uppercase tracking-wider rounded-[3px] transition-colors duration-150 self-start md:self-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-[#343A24]"
             >
               <span>View All Projects</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -422,9 +423,8 @@ export const Home: React.FC<HomeProps> = ({
                   </div>
 
                   <div className="p-6 space-y-2.5">
-                    {/* Unboxed metadata with typographic separators */}
-                    <div className="flex items-center gap-2 text-xs text-[#77786F]">
-                      <span className="font-semibold text-[#C6A65B] uppercase tracking-wider">
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-[#595B53]">
+                      <span className="font-semibold text-[#9B7E38] uppercase tracking-wider">
                         {project.projectType}
                       </span>
                       <span aria-hidden="true">·</span>
@@ -434,7 +434,7 @@ export const Home: React.FC<HomeProps> = ({
                       </span>
                     </div>
 
-                    <h3 className="text-xl sm:text-2xl font-heading font-semibold text-[#343A24] group-hover:text-[#C6A65B] transition-colors duration-150 leading-snug">
+                    <h3 className="text-xl sm:text-2xl font-heading font-semibold text-[#343A24] group-hover:text-[#9B7E38] transition-colors duration-150 leading-snug">
                       {project.title}
                     </h3>
 
@@ -445,12 +445,12 @@ export const Home: React.FC<HomeProps> = ({
                 </div>
 
                 <div className="px-6 py-3.5 bg-[#F5F4EF] border-t border-[#292B27]/10 flex items-center justify-between text-xs text-[#292B27]">
-                  <span className="font-medium group-hover:text-[#C6A65B] transition-colors flex items-center gap-1">
+                  <span className="font-medium group-hover:text-[#9B7E38] transition-colors flex items-center gap-1">
                     <span>View Drawings & Details</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </span>
                   {project.totalArea && (
-                    <span className="font-numeric text-[#77786F] text-[11px]">{project.totalArea}</span>
+                    <span className="font-numeric text-[#595B53] text-[11px]">{project.totalArea}</span>
                   )}
                 </div>
               </div>
@@ -460,10 +460,10 @@ export const Home: React.FC<HomeProps> = ({
       </section>
 
       {/* ===================== WHY K S ASSOCIATES ===================== */}
-      <section className="py-24 sm:py-28 bg-white border-b border-[#292B27]/10">
+      <section className="py-20 sm:py-28 bg-white border-b border-[#292B27]/10">
         <div className="corporate-container">
           <div className="max-w-3xl mb-14 space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#C6A65B]">
+            <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9B7E38]">
               Engineering Discipline
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-[40px] font-heading font-semibold text-[#343A24]">
@@ -504,15 +504,15 @@ export const Home: React.FC<HomeProps> = ({
           <h2 className="text-3xl sm:text-5xl font-heading font-semibold text-white leading-tight">
             Have a Project in Mind?
           </h2>
-          <p className="text-sm sm:text-base text-white/80 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base text-white/85 max-w-2xl mx-auto leading-relaxed">
             Let's discuss your next construction, surveying or 3D design requirement with our engineering team in Feroke, Calicut.
           </p>
 
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3.5">
+          <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3.5 max-w-md sm:max-w-none mx-auto">
             <button
               type="button"
               onClick={() => onOpenContactModal()}
-              className="w-full sm:w-auto px-7 py-3 bg-[#C6A65B] text-[#292B27] hover:bg-[#DECA8D] font-semibold text-xs uppercase tracking-wider rounded-[3px] transition-colors duration-150 focus:outline-none focus-visible:ring-1 focus-visible:ring-white"
+              className="min-h-[44px] w-full sm:w-auto px-7 py-3 bg-[#C6A65B] text-[#292B27] hover:bg-[#DECA8D] font-semibold text-xs uppercase tracking-wider rounded-[3px] transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               Contact Us
             </button>
@@ -522,18 +522,26 @@ export const Home: React.FC<HomeProps> = ({
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-7 py-3 bg-white/10 hover:bg-white/15 text-white border border-white/20 font-semibold text-xs uppercase tracking-wider rounded-[3px] transition-colors duration-150 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#C6A65B]"
+              className="min-h-[44px] w-full sm:w-auto px-7 py-3 bg-white/10 hover:bg-white/15 text-white border border-white/25 font-semibold text-xs uppercase tracking-wider rounded-[3px] transition-colors duration-150 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C6A65B]"
             >
-              WhatsApp Enquiry
+              WhatsApp: {COMPANY_INFO.displayWhatsApp}
             </a>
           </div>
 
-          <div className="pt-6 text-xs text-white/60 flex flex-wrap items-center justify-center gap-4">
-            <span>Direct Call: <strong className="text-white font-numeric">{COMPANY_INFO.displayPhone}</strong></span>
+          <div className="pt-6 text-xs text-white/75 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            <a href={`tel:${COMPANY_INFO.phone}`} className="hover:text-[#C6A65B] transition-colors">
+              Call: <strong className="text-white font-numeric">{COMPANY_INFO.displayPhone}</strong>
+            </a>
+            <span aria-hidden="true">·</span>
+            <span>
+              WhatsApp: <strong className="text-[#25D366] font-numeric">{COMPANY_INFO.displayWhatsApp}</strong>
+            </span>
             <span aria-hidden="true">·</span>
             <span>Office: Farook Hospital Complex, Feroke</span>
             <span aria-hidden="true">·</span>
-            <span>GSTIN: <strong className="font-numeric">{COMPANY_INFO.gstin}</strong></span>
+            <span>
+              GSTIN: <strong className="font-numeric">{COMPANY_INFO.gstin}</strong>
+            </span>
           </div>
         </div>
       </section>
