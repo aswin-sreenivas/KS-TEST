@@ -37,6 +37,10 @@ export const Logo: React.FC<LogoProps> = ({
         <img
           src={OFFICIAL_LOGO_PATH}
           alt="K S Associates – Official Logo"
+          width={2129}
+          height={739}
+          loading="eager"
+          decoding="sync"
           className={`${logoHeights[size]} w-auto object-contain block ${
             isLight ? 'brightness-0 invert' : ''
           }`}

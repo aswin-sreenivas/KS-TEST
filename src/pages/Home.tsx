@@ -130,9 +130,9 @@ export const Home: React.FC<HomeProps> = ({
 
         {/* Hero Content Container */}
         <div className="relative z-10 corporate-container py-28 sm:py-36 flex flex-col justify-center min-h-[90vh] sm:min-h-[92vh]">
-          <div className="max-w-3xl space-y-6">
+          <div className="max-w-4xl space-y-6">
             {/* Main Heading */}
-            <h1 className="font-fancy-entry font-bold text-3xl sm:text-6xl lg:text-[72px] text-white tracking-[0.02em] leading-[1.15] sm:leading-[1.12] drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)]">
+            <h1 className="font-fancy-entry font-bold text-3xl sm:text-5xl lg:text-[64px] text-white tracking-[0.02em] leading-[1.15] sm:leading-[1.12] drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)]">
               Building Trust. <br />
               <span className="text-[#DECA8D] font-bold">
                 Creating Landmarks.

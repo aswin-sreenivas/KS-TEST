@@ -4,7 +4,7 @@
  * K S Associates – Corporate Website Application Root
  */
 
-import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy, startTransition } from 'react';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { WhatsAppButton } from './components/WhatsAppButton';
@@ -22,6 +22,7 @@ import {
 import { ArrowUp } from 'lucide-react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { updatePageSeo } from './utils/seo';
+import { getLoadedPageComponent, preloadPageComponent } from './utils/pageLoader';
 
 const About = lazy(() => import('./pages/About').then((m) => ({ default: m.About })));
 const Services = lazy(() => import('./pages/Services').then((m) => ({ default: m.Services })));
@@ -74,15 +75,25 @@ export default function App() {
 
   // Synchronize browser history (popstate) and hash changes
   useEffect(() => {
-    const syncRoute = () => {
-      const next = resolveInitialLocation();
-      setCurrentPage(next.route);
-      setSelectedProject(next.project);
+    const applyRouteState = (next: { route: AppRoute; project: ProjectItem | null }) => {
+      startTransition(() => {
+        setCurrentPage(next.route);
+        setSelectedProject(next.project);
+      });
 
       const hashId = window.location.hash.replace(/^#/, '');
       if (next.route === 'services' && hashId) {
         scrollToSectionWithRetry(hashId);
       }
+    };
+
+    const syncRoute = () => {
+      const next = resolveInitialLocation();
+      if (next.route !== 'home' && !getLoadedPageComponent(next.route)) {
+        void preloadPageComponent(next.route).finally(() => applyRouteState(next));
+        return;
+      }
+      applyRouteState(next);
     };
 
     window.addEventListener('popstate', syncRoute);
@@ -118,24 +129,35 @@ export default function App() {
   }, []);
 
   const handleNavigate = useCallback((page: PageRoute, hashSection?: string) => {
-    setSelectedProject(null);
-    setCurrentPage(page);
-    const targetPath = getRoutePath(page, hashSection);
-    const currentFull = `${window.location.pathname}${window.location.hash}`;
+    const commitNavigation = () => {
+      startTransition(() => {
+        setSelectedProject(null);
+        setCurrentPage(page);
+      });
+      const targetPath = getRoutePath(page, hashSection);
+      const currentFull = `${window.location.pathname}${window.location.hash}`;
 
-    if (currentFull !== targetPath) {
-      try {
-        window.history.pushState(null, '', targetPath);
-      } catch {
-        window.location.hash = hashSection || page;
+      if (currentFull !== targetPath) {
+        try {
+          window.history.pushState(null, '', targetPath);
+        } catch {
+          window.location.hash = hashSection || page;
+        }
       }
+
+      if (hashSection) {
+        scrollToSectionWithRetry(hashSection);
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+
+    if (page !== 'home' && !getLoadedPageComponent(page)) {
+      void preloadPageComponent(page).finally(commitNavigation);
+      return;
     }
 
-    if (hashSection) {
-      scrollToSectionWithRetry(hashSection);
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    commitNavigation();
   }, []);
 
   const handleOpenContactModal = useCallback((service?: ServiceCategory) => {
@@ -224,38 +246,79 @@ export default function App() {
             />
           )}
 
-          {currentPage !== 'home' && (
-            <Suspense
-              fallback={
-                <div className="pt-40 pb-24 text-center text-xs uppercase tracking-widest text-[#595B53]">
-                  Loading Section...
-                </div>
-              }
-            >
-              {currentPage === 'about' && (
-                <About
+          {currentPage !== 'home' && (() => {
+            const PreloadedAbout = getLoadedPageComponent('about');
+            const PreloadedServices = getLoadedPageComponent('services');
+            const PreloadedProjects = getLoadedPageComponent('projects');
+            const PreloadedContact = getLoadedPageComponent('contact');
+            const PreloadedNotFound = getLoadedPageComponent('not-found');
+
+            if (currentPage === 'about' && PreloadedAbout) {
+              return (
+                <PreloadedAbout
                   onNavigate={handleNavigate}
                   onOpenContactModal={() => handleOpenContactModal()}
                 />
-              )}
-              {currentPage === 'services' && (
-                <Services
+              );
+            }
+            if (currentPage === 'services' && PreloadedServices) {
+              return (
+                <PreloadedServices
                   onNavigate={handleNavigate}
                   onOpenContactModal={handleOpenContactModal}
                   onOpenProjectModal={setSelectedProject}
                 />
-              )}
-              {currentPage === 'projects' && (
-                <Projects
+              );
+            }
+            if (currentPage === 'projects' && PreloadedProjects) {
+              return (
+                <PreloadedProjects
                   onOpenProjectModal={setSelectedProject}
                   onOpenContactModal={() => handleOpenContactModal()}
                   onNavigate={handleNavigate}
                 />
-              )}
-              {currentPage === 'contact' && <Contact />}
-              {currentPage === 'not-found' && <NotFound onNavigate={handleNavigate} />}
-            </Suspense>
-          )}
+              );
+            }
+            if (currentPage === 'contact' && PreloadedContact) {
+              return <PreloadedContact />;
+            }
+            if (currentPage === 'not-found' && PreloadedNotFound) {
+              return <PreloadedNotFound onNavigate={handleNavigate} />;
+            }
+
+            return (
+              <Suspense
+                fallback={
+                  <div className="min-h-[85vh] pt-40 pb-24 text-center text-xs uppercase tracking-widest text-[#595B53]">
+                    Loading Section...
+                  </div>
+                }
+              >
+                {currentPage === 'about' && (
+                  <About
+                    onNavigate={handleNavigate}
+                    onOpenContactModal={() => handleOpenContactModal()}
+                  />
+                )}
+                {currentPage === 'services' && (
+                  <Services
+                    onNavigate={handleNavigate}
+                    onOpenContactModal={handleOpenContactModal}
+                    onOpenProjectModal={setSelectedProject}
+                  />
+                )}
+                {currentPage === 'projects' && (
+                  <Projects
+                    onOpenProjectModal={setSelectedProject}
+                    onOpenContactModal={() => handleOpenContactModal()}
+                    onNavigate={handleNavigate}
+                  />
+                )}
+                {currentPage === 'contact' && <Contact />}
+                {currentPage === 'not-found' && <NotFound onNavigate={handleNavigate} />}
+              </Suspense>
+            );
+          })()}
         </main>
 
         {/* Corporate Footer */}

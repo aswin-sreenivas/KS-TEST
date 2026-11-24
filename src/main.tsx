@@ -2,22 +2,14 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import { parseRouteFromLocation } from './types/app';
+import { preloadPageComponent } from './utils/pageLoader';
 
 async function bootstrap() {
   const initialRoute = parseRouteFromLocation(window.location.pathname, window.location.hash);
 
-  // Preload active lazy route chunk before mounting so prerendered HTML transitions smoothly
-  if (initialRoute === 'about') {
-    await import('./pages/About');
-  } else if (initialRoute === 'services') {
-    await import('./pages/Services');
-  } else if (initialRoute === 'projects') {
-    await import('./pages/Projects');
-  } else if (initialRoute === 'contact') {
-    await import('./pages/Contact');
-  } else if (initialRoute === 'not-found') {
-    await import('./pages/NotFound');
-  }
+  // Preload active route module into the synchronous registry before mounting so React renders
+  // the prerendered route immediately without flashing a Suspense fallback.
+  await preloadPageComponent(initialRoute);
 
   const rootElement = document.getElementById('root');
   if (rootElement) {

@@ -8,6 +8,7 @@ import React from 'react';
 import { Logo } from './Logo';
 import { COMPANY_INFO, SERVICES } from '../data/company';
 import { PageRoute, getRoutePath } from '../types/app';
+import { preloadPageComponent } from '../utils/pageLoader';
 import { Phone, Mail, MapPin, FileText, ArrowRight } from 'lucide-react';
 
 interface FooterProps {
@@ -64,6 +65,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <li key={s.id}>
                   <a
                     href={getRoutePath('services', s.id)}
+                    onMouseEnter={() => {
+                      void preloadPageComponent('services');
+                    }}
+                    onFocus={() => {
+                      void preloadPageComponent('services');
+                    }}
                     onClick={(e) => {
                       e.preventDefault();
                       onNavigate('services', s.id);
@@ -80,6 +87,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li className="pt-1">
                 <a
                   href={getRoutePath('projects')}
+                  onMouseEnter={() => {
+                    void preloadPageComponent('projects');
+                  }}
+                  onFocus={() => {
+                    void preloadPageComponent('projects');
+                  }}
                   onClick={(e) => {
                     e.preventDefault();
                     onNavigate('projects');
@@ -103,6 +116,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <li key={item.id}>
                   <a
                     href={getRoutePath(item.id)}
+                    onMouseEnter={() => {
+                      void preloadPageComponent(item.id);
+                    }}
+                    onFocus={() => {
+                      void preloadPageComponent(item.id);
+                    }}
                     onClick={(e) => {
                       e.preventDefault();
                       onNavigate(item.id);

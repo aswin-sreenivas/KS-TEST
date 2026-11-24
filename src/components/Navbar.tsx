@@ -9,6 +9,7 @@ import { Logo } from './Logo';
 import { COMPANY_INFO } from '../data/company';
 import { AppRoute, PageRoute, getRoutePath } from '../types/app';
 import { useDialogBehavior } from '../hooks/useDialogBehavior';
+import { preloadPageComponent } from '../utils/pageLoader';
 import { Phone, Menu, X, MessageSquare } from 'lucide-react';
 
 interface NavbarProps {
@@ -60,10 +61,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-200 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-200 py-3 ${
           isTransparent
-            ? 'bg-gradient-to-b from-[#242918]/85 via-[#242918]/40 to-transparent py-3.5 sm:py-5'
-            : 'bg-[#343A24] border-b border-[#C6A65B]/20 py-3 shadow-sm'
+            ? 'bg-gradient-to-b from-[#242918]/85 via-[#242918]/40 to-transparent'
+            : 'bg-[#343A24] border-b border-[#C6A65B]/20 shadow-sm'
         }`}
       >
         <div className="corporate-container">
@@ -77,7 +78,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <Logo
                 variant="light"
-                size={isScrolled ? 'sm' : 'md'}
+                size="md"
                 showTagline={true}
               />
             </button>
@@ -90,6 +91,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <a
                     key={link.id}
                     href={getRoutePath(link.id)}
+                    onMouseEnter={() => {
+                      void preloadPageComponent(link.id);
+                    }}
+                    onFocus={() => {
+                      void preloadPageComponent(link.id);
+                    }}
                     onClick={(e) => {
                       e.preventDefault();
                       handleNavClick(link.id);
