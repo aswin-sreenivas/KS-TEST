@@ -20,6 +20,7 @@ import {
   parseRouteFromLocation,
 } from './types/app';
 import { ArrowUp } from 'lucide-react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { updatePageSeo } from './utils/seo';
 
 const About = lazy(() => import('./pages/About').then((m) => ({ default: m.About })));
@@ -299,6 +300,10 @@ export default function App() {
             />
           </Suspense>
         )}
+        {/* Vercel Speed Insights (React / Vite) */}
+        <SpeedInsights
+          route={currentPage === 'not-found' ? '/404' : getRoutePath(currentPage)}
+        />
       </div>
     </ErrorBoundary>
   );

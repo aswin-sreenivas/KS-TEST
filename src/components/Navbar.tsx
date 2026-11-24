@@ -121,7 +121,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 type="button"
                 onClick={() => setIsMobileMenuOpen((prev) => !prev)}
                 aria-expanded={isMobileMenuOpen}
-                aria-controls="mobile-nav-drawer"
+                aria-controls={isMobileMenuOpen ? 'mobile-nav-drawer' : undefined}
                 className="min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center text-white hover:text-[#C6A65B] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C6A65B] rounded-[2px]"
                 aria-label={isMobileMenuOpen ? 'Close Menu' : 'Open Navigation Menu'}
               >

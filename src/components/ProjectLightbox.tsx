@@ -4,7 +4,7 @@
  * K S Associates – Architectural Project Detail & Lightbox Modal
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useId, useRef } from 'react';
 import { ProjectItem } from '../data/company';
 import { getRoutePath } from '../types/app';
 import { useDialogBehavior } from '../hooks/useDialogBehavior';
@@ -43,6 +43,7 @@ export const ProjectLightbox: React.FC<ProjectLightboxProps> = ({
   const [zoomLevel, setZoomLevel] = useState(1);
   const [imageError, setImageError] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
 
   useDialogBehavior(Boolean(project), onClose, modalRef);
 
@@ -99,14 +100,14 @@ export const ProjectLightbox: React.FC<ProjectLightboxProps> = ({
 
   return (
     <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="project-modal-title"
       onClick={onClose}
       className="fixed inset-0 z-50 overflow-y-auto bg-black/85 flex items-start justify-center p-2.5 sm:p-6"
     >
       <div
         ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
         className="relative my-auto w-full max-w-6xl bg-[#F5F4EF] rounded-[3px] border border-[#292B27]/20 max-h-[94vh] flex flex-col shadow-2xl focus:outline-none"
@@ -339,7 +340,7 @@ export const ProjectLightbox: React.FC<ProjectLightboxProps> = ({
                     {project.location}
                   </span>
                 </div>
-                <h3 id="project-modal-title" className="text-2xl sm:text-3xl font-heading font-semibold text-[#343A24]">
+                <h3 id={titleId} className="text-2xl sm:text-3xl font-heading font-semibold text-[#343A24]">
                   {project.title}
                 </h3>
               </div>

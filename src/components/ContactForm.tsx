@@ -305,23 +305,20 @@ export const ContactForm: React.FC<ContactFormProps> = ({
   const serviceId = `${formIdPrefix}-service`;
   const locationId = `${formIdPrefix}-location`;
   const messageId = `${formIdPrefix}-message`;
-  const gotchaId = `${formIdPrefix}-gotcha`;
 
   return (
     <form onSubmit={handleSubmit} noValidate className={`space-y-4 ${className}`}>
       {/* Honeypot anti-spam trap */}
-      <div className="sr-only" aria-hidden="true">
-        <label htmlFor={gotchaId}>Leave this field blank</label>
-        <input
-          id={gotchaId}
-          name="_gotcha"
-          type="text"
-          tabIndex={-1}
-          autoComplete="off"
-          value={honeypot}
-          onChange={(e) => setHoneypot(e.target.value)}
-        />
-      </div>
+      <input
+        name="_gotcha"
+        type="text"
+        tabIndex={-1}
+        aria-hidden="true"
+        autoComplete="new-password"
+        value={honeypot}
+        onChange={(e) => setHoneypot(e.target.value)}
+        className="sr-only pointer-events-none"
+      />
 
       {submitError && (
         <div

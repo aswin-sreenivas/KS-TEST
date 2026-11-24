@@ -4,7 +4,7 @@
  * K S Associates – Corporate Contact Modal (Refined Standard)
  */
 
-import React, { useRef } from 'react';
+import React, { useId, useRef } from 'react';
 import { ContactForm } from './ContactForm';
 import { ServiceCategory } from '../types/app';
 import { useDialogBehavior } from '../hooks/useDialogBehavior';
@@ -22,20 +22,21 @@ export const ContactModal: React.FC<ContactModalProps> = ({
   defaultService,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
   useDialogBehavior(isOpen, onClose, modalRef);
 
   if (!isOpen) return null;
 
   return (
     <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="contact-modal-title"
       onClick={onClose}
       className="fixed inset-0 z-50 overflow-y-auto bg-black/80 flex items-start justify-center p-4"
     >
       <div
         ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
         className="relative my-auto w-full max-w-lg bg-[#F5F4EF] rounded-[3px] border border-[#292B27]/20 shadow-2xl overflow-hidden focus:outline-none"
@@ -43,7 +44,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 bg-[#343A24] text-white border-b border-[#C6A65B]/20">
           <div>
-            <h3 id="contact-modal-title" className="font-heading text-lg sm:text-xl font-semibold tracking-normal text-white">
+            <h3 id={titleId} className="font-heading text-lg sm:text-xl font-semibold tracking-normal text-white">
               Discuss Your Project
             </h3>
             <p className="text-[11px] text-[#C6A65B] uppercase tracking-wider font-semibold">
